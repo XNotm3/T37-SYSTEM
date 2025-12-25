@@ -10,7 +10,7 @@ st.markdown("""
         padding: 20px;
         border-radius: 15px;
     }
-    .stMarkdown, label, .stCaption {
+    .stMarkdown, label, .stCaption, p, .streamlit-expanderHeader {
         color: #e0e0e0 !important;
         font-family: 'Courier New', monospace;
     }
@@ -27,12 +27,25 @@ st.markdown("""
     section[data-testid="stSidebar"] {
         background-color: #0a0a0a;
     }
+    /* Sliders por capa */
+    div[data-testid="stTab"]:nth-child(1) ~ div .stSlider > div > div > div > div {
+        background: linear-gradient(to right, #ff0000, #ff5555) !important;
+    }
+    div[data-testid="stTab"]:nth-child(2) ~ div .stSlider > div > div > div > div {
+        background: linear-gradient(to right, #ff8800, #ffaa55) !important;
+    }
+    div[data-testid="stTab"]:nth-child(3) ~ div .stSlider > div > div > div > div {
+        background: linear-gradient(to right, #ffff00, #ffff77) !important;
+    }
+    div[data-testid="stTab"]:nth-child(4) ~ div .stSlider > div > div > div > div {
+        background: linear-gradient(to right, #00ff00, #55ff55) !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
 st.set_page_config(page_title="T37 PERSONALITY SYSTEM", layout="wide")
-st.title("🧠 T37 PERSONALITY SYSTEM v6.7")
-st.markdown("**SIMULADOR DETERMINISTA AVANZADO • TRANSFORMA TU SISTEMA PERSONAL**")
+st.title("🧠 T37 PERSONALITY SYSTEM")
+st.markdown("**SIMULADOR DETERMINISTA AVANZADO**")
 st.markdown("Cada capa se desglosa en sus componentes causales más potentes. El slider global muestra la media automática.")
 st.markdown("---")
 
@@ -101,21 +114,21 @@ with tab1:
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        v["gen_heredada"] = st.slider("GENÉTICA HEREDADA", 0, 100, v.get("gen_heredada", 50))
+        v["gen_heredada"] = st.slider("GENÉTICA HEREDADA", 0,100,v.get("gen_heredada", 50))
     with col_h:
         with st.expander("?"):
             st.write("Variantes genéticas clave. Temperamento base.")
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        v["exp_prenatal"] = st.slider("EXPOSICIÓN PRENATAL", 0, 100, v.get("exp_prenatal", 50))
+        v["exp_prenatal"] = st.slider("EXPOSICIÓN PRENATAL", 0,100,v.get("exp_prenatal", 50))
     with col_h:
         with st.expander("?"):
             st.write("Estrés y hormonas en útero.")
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        v["neuro_critico"] = st.slider("NEURODESARROLLO CRÍTICO", 0, 100, v.get("neuro_critico", 50))
+        v["neuro_critico"] = st.slider("NEURODESARROLLO CRÍTICO", 0,100,v.get("neuro_critico", 50))
     with col_h:
         with st.expander("?"):
             st.write("Cableado permanente 0-3 años.")
@@ -127,21 +140,21 @@ with tab2:
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        v["estilo_apego"] = st.slider("ESTILO DE APEGO", 0, 100, v.get("estilo_apego", 60))
+        v["estilo_apego"] = st.slider("ESTILO DE APEGO", 0,100,v.get("estilo_apego", 60))
     with col_h:
         with st.expander("?"):
             st.write("Seguro/ansioso/evitante.")
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        v["esquemas_maladapt"] = st.slider("ESQUEMAS MALADAPTATIVOS", 0, 100, v.get("esquemas_maladapt", 60))
+        v["esquemas_maladapt"] = st.slider("ESQUEMAS MALADAPTATIVOS", 0,100,v.get("esquemas_maladapt", 60))
     with col_h:
         with st.expander("?"):
             st.write("Creencias núcleo negativas.")
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        v["narrativa_cultural"] = st.slider("NARRATIVA CULTURAL", 0, 100, v.get("narrativa_cultural", 60))
+        v["narrativa_cultural"] = st.slider("NARRATIVA CULTURAL", 0,100,v.get("narrativa_cultural", 60))
     with col_h:
         with st.expander("?"):
             st.write("Valores internalizados.")
@@ -153,21 +166,21 @@ with tab3:
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        v["fisiologia_actual"] = st.slider("FISIOLOGÍA ACTUAL", 0, 100, v.get("fisiologia_actual", 70))
+        v["fisiologia_actual"] = st.slider("FISIOLOGÍA ACTUAL", 0,100,v.get("fisiologia_actual", 70))
     with col_h:
         with st.expander("?"):
             st.write("Sueño, hormonas, ejercicio.")
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        v["habitos_ejecutivos"] = st.slider("HÁBITOS EJECUTIVOS", 0, 100, v.get("habitos_ejecutivos", 70))
+        v["habitos_ejecutivos"] = st.slider("HÁBITOS EJECUTIVOS", 0,100,v.get("habitos_ejecutivos", 70))
     with col_h:
         with st.expander("?"):
             st.write("Disciplina, planificación.")
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        v["exp_adultas"] = st.slider("EXPERIENCIAS ADULTAS", 0, 100, v.get("exp_adultas", 65))
+        v["exp_adultas"] = st.slider("EXPERIENCIAS ADULTAS", 0,100,v.get("exp_adultas", 65))
     with col_h:
         with st.expander("?"):
             st.write("Éxitos y traumas recientes.")
@@ -182,35 +195,35 @@ with tab4:
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        v["personas_cercanas"] = st.slider("PERSONAS CERCANAS", 0, 100, v.get("personas_cercanas", 75))
+        v["personas_cercanas"] = st.slider("PERSONAS CERCANAS", 0,100,v.get("personas_cercanas", 75))
     with col_h:
         with st.expander("?"):
             st.write("Calidad emocional diaria de relaciones cercanas.")
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        v["contenido_consumido"] = st.slider("CONTENIDO CONSUMIDO", 0, 100, v.get("contenido_consumido", 75))
+        v["contenido_consumido"] = st.slider("CONTENIDO CONSUMIDO", 0,100,v.get("contenido_consumido", 75))
     with col_h:
         with st.expander("?"):
             st.write("Redes, noticias, conversaciones.")
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        v["espacio_fisico"] = st.slider("ESPACIO FÍSICO", 0, 100, v.get("espacio_fisico", 75))
+        v["espacio_fisico"] = st.slider("ESPACIO FÍSICO", 0,100,v.get("espacio_fisico", 75))
     with col_h:
         with st.expander("?"):
             st.write("Orden, luz, ruido.")
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        v["estado_momento"] = st.slider("ESTADO MOMENTO", 0, 100, v.get("estado_momento", 80))
+        v["estado_momento"] = st.slider("ESTADO MOMENTO", 0,100,v.get("estado_momento", 80))
     with col_h:
         with st.expander("?"):
             st.write("Energía actual, postura.")
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        v["conciencia_interna"] = st.slider("CONCIENCIA INTERNA", 0, 100, v.get("conciencia_interna", 60))
+        v["conciencia_interna"] = st.slider("CONCIENCIA INTERNA", 0,100,v.get("conciencia_interna", 60))
     with col_h:
         with st.expander("?"):
             st.write("Meditación, terapia. Amplificador.")
@@ -218,7 +231,7 @@ with tab4:
 st.markdown("---")
 st.header("🧬 DIAGNÓSTICO DE SISTEMA")
 
-# Cálculo con .get() para seguridad
+# Cálculo
 v = st.session_state.values
 
 nucleo = (v.get("gen_heredada", 50) + v.get("exp_prenatal", 50) + v.get("neuro_critico", 50)) / 3 / 100
