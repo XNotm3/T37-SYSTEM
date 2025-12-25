@@ -4,38 +4,26 @@ import random
 # === THEME T37 - FONDO NEGRO SÓLIDO + NEON SELECTIVO ===
 st.markdown("""
 <style>
-    /* Fondo negro sólido */
     .stApp { background-color: #000000; }
-    
-    /* Contenido principal */
     .main > div {
         background-color: rgba(10, 10, 10, 0.9);
         padding: 20px;
         border-radius: 15px;
     }
-    
-    /* Texto general */
     .stMarkdown, label, .stCaption {
         color: #e0e0e0 !important;
         font-family: 'Courier New', monospace;
     }
-    
-    /* Título y diagnóstico con neon azul */
     h1, .diagnostico-titulo {
         color: #00bfff !important;
         text-shadow: 0 0 20px #00bfff;
         text-align: center;
         font-size: 2.8rem !important;
     }
-    
     h2 { font-size: 1.8rem !important; color: #ffffff; }
-    
-    /* Progress bars neon azul */
     .stProgress > div > div > div > div {
         background: linear-gradient(to right, #00bfff, #0099ff) !important;
     }
-    
-    /* Sidebar */
     section[data-testid="stSidebar"] {
         background-color: #0a0a0a;
     }
@@ -43,7 +31,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.set_page_config(page_title="T37 PERSONALITY SYSTEM", layout="wide")
-st.title("🧠 T37 PERSONALITY SYSTEM v6.0")
+st.title("🧠 T37 PERSONALITY SYSTEM v6.1")
 st.markdown("**SIMULADOR DETERMINISTA AVANZADO • TRANSFORMA TU SISTEMA PERSONAL**")
 st.markdown("Cada capa se desglosa en sus componentes causales más potentes. El slider global muestra la media automática.")
 st.markdown("---")
@@ -61,17 +49,12 @@ default_values = {
     "estado_momento": 80, "conciencia_interna": 60
 }
 
-# === Estado de sesión centralizado (CORREGIDO) ===
+# === Estado de sesión centralizado (SIN LA LÍNEA PROBLEMÁTICA) ===
 if "values" not in st.session_state:
     st.session_state.values = default_values.copy()
 
 if "perfiles" not in st.session_state:
     st.session_state.perfiles = {}
-
-# Asegurar que todos los valores existan
-for key, val in default_values.items():
-    if key not in st.session_state.values:
-        st.session_state.values[key] = val
 
 # === Sidebar ===
 st.sidebar.header("🎛️ MODOS RÁPIDOS")
@@ -244,7 +227,7 @@ with tab4:
 st.markdown("---")
 st.header("🧬 DIAGNÓSTICO DE SISTEMA")
 
-# Cálculo preciso
+# Cálculo
 v = st.session_state.values
 
 nucleo = (v["gen_heredada"] + v["exp_prenatal"] + v["neuro_critico"]) / 3 / 100
@@ -299,4 +282,4 @@ st.success(f"**BOTTLENECK**: {bottleneck} → Ataca primero esta área")
 
 st.info("💡 CONSEJO: Las capas externas y medias son tu mayor palanca de cambio inmediato.")
 
-st.caption("T37 PERSONALITY SYSTEM v6.0 • Edición Causal Profunda • Tu herramienta de transformación real")
+st.caption("T37 PERSONALITY SYSTEM v6.1 • Edición Causal Profunda • Tu herramienta de transformación real")
