@@ -31,7 +31,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.set_page_config(page_title="T37 PERSONALITY SYSTEM", layout="wide")
-st.title("🧠 T37 PERSONALITY SYSTEM v8.0")
+st.title("🧠 T37 PERSONALITY SYSTEM v8.1")
 st.markdown("**SIMULADOR DETERMINISTA AVANZADO • TRANSFORMA TU SISTEMA PERSONAL**")
 st.markdown("Cada capa se desglosa en sus componentes causales más potentes. El slider global muestra la media automática.")
 st.markdown("---")
@@ -89,7 +89,7 @@ if cargar:
 if preset != "Ninguno" and presets[preset] is not None:
     st.session_state.values.update(presets[preset])
 
-# === Tabs con sliders (actualizan v) ===
+# === Tabs ===
 tab1, tab2, tab3, tab4 = st.tabs(["🔴 NÚCLEO", "🟠 PROFUNDAS", "🟡 MEDIAS", "🟢 EXTERNAS"])
 
 v = st.session_state.values
@@ -215,10 +215,10 @@ with tab4:
         with st.expander("?"):
             st.write("Meditación, terapia. Amplificador.")
 
-# === DIAGNÓSTICO (AL FINAL, DESPUÉS DE SLIDERS) ===
 st.markdown("---")
 st.header("🧬 DIAGNÓSTICO DE SISTEMA")
 
+# Cálculo con .get() para seguridad
 v = st.session_state.values
 
 nucleo = (v.get("gen_heredada", 50) + v.get("exp_prenatal", 50) + v.get("neuro_critico", 50)) / 3 / 100
@@ -231,9 +231,46 @@ amp = (v.get("conciencia_interna", 60) / 100) ** 0.6
 
 score = (nucleo * 0.25 + profundas * 0.20 + medias * 0.30 + externas * 0.25) * 100 * amp
 
+# Rasgos (paréntesis correctamente cerrados)
 rasgos = {
-    "RESILIENCIA": round(nucleo*60 + medias*30 + v.get("conciencia_interna", 60)/100*10,1),
-    "FOCO": round(v.get("habitos_ejecutivos", 70)/100*60 + v.get("fisiologia_actual", 70)/100*30 + v.get("estado_momento", 80)/100*10,1),
-    "EMPATÍA": round(profundas*50 + entorno*40 + v.get("conciencia_interna", 60)/100*10,1),
-    "CREATIVIDAD": round(nucleo*30 + externas*50 + v.get("conciencia_interna", 60)/100*20,1),
-    "BAJA ANSIEDAD": round(100 - (nucleo
+    "RESILIENCIA": round(nucleo*60 + medias*30 + v.get("conciencia_interna", 60)/100*10, 1),
+    "FOCO": round(v.get("habitos_ejecutivos", 70)/100*60 + v.get("fisiologia_actual", 70)/100*30 + v.get("estado_momento", 80)/100*10, 1),
+    "EMPATÍA": round(profundas*50 + entorno*40 + v.get("conciencia_interna", 60)/100*10, 1),
+    "CREATIVIDAD": round(nucleo*30 + externas*50 + v.get("conciencia_interna", 60)/100*20, 1),
+    "BAJA ANSIEDAD": round(100 - (nucleo*40 + v.get("fisiologia_actual", 70)/100*40 + entorno*20), 1),
+    "AUTOESTIMA": round(profundas*50 + v.get("exp_adultas", 65)/100*40 + v.get("conciencia_interna", 60)/100*10, 1),
+}
+
+if score >= 90: perfil, emoji = "TITÁN OPTIMIZADO", "🦸"
+elif score >= 80: perfil, emoji = "ALTO RENDIMIENTO", "⚡"
+elif score >= 65: perfil, emoji = "EQUILIBRADO", "🟢"
+elif score >= 50: perfil, emoji = "SUPERVIVENCIA", "🟡"
+elif score >= 35: perfil, emoji = "REACTIVO", "🟠"
+else: perfil, emoji = "SOBRECARGA", "🔴"
+
+st.markdown(f"<h1 class='diagnostico-titulo'>{emoji} {perfil}</h1>", unsafe_allow_html=True)
+st.progress(score/100)
+st.metric("GLOBAL", f"{score:.1f}/100")
+
+st.subheader("RADAR DE RASGOS")
+for rasgo, val in rasgos.items():
+    st.progress(val/100)
+    st.caption(f"**{rasgo}**: {val}/100")
+
+st.subheader("DESCRIPCIÓN")
+desc = {
+    "TITÁN OPTIMIZADO": "Operas cerca del máximo de tu rango genético. Flujo, resiliencia y claridad sostenida.",
+    "ALTO RENDIMIENTO": "Energía abundante, foco consistente y regulación emocional óptima.",
+    "EQUILIBRADO": "Funcionamiento sólido con amplio margen para upgrades.",
+    "SUPERVIVENCIA": "Operativo pero con esfuerzo. Prioriza recuperación.",
+    "REACTIVO": "Alta reactividad emocional. Intervención urgente en fisiología y entorno.",
+    "SOBRECARGA": "Sistema en riesgo. Modo protección: descanso y aislamiento de estresores."
+}
+st.write(desc[perfil])
+
+bottleneck = min(rasgos, key=rasgos.get)
+st.success(f"**BOTTLENECK**: {bottleneck} → Ataca primero esta área")
+
+st.info("💡 CONSEJO: Las capas externas y medias son tu mayor palanca de cambio inmediato.")
+
+st.caption("T37 PERSONALITY SYSTEM v8.1 • Versión final estable • Tu herramienta de transformación real")
