@@ -104,7 +104,49 @@ rasgos = {
     "Foco y productividad": round(h * 60 + f * 30 + mom * 10, 1),
     "Empatía y conexión social": round(mod_creencias * 40 + ent * 40 + cult * 20, 1),
     "Creatividad y apertura": round(rango_genetico * 30 + mod_externo * 50 + con * 20, 1),
-    "Reactividad/Ans
-- Amplificación no lineal por conciencia  
-Despliégalo en Streamlit Cloud y compártelo con quien quieras. ¡Experimenta libremente!
-""")
+    "Reactividad/Ansiedad (baja = buena)": round(100 - (n * 40 + f * 40 + ent * 20), 1),
+    "Autoestima estable": round(e * 50 + exp * 40 + con * 10, 1),
+}
+
+# Perfil global
+if score_final >= 90:
+    perfil = "🦸‍♂️ TITÁN OPTIMIZADO"
+elif score_final >= 80:
+    perfil = "⚡ ALTO RENDIMIENTO SOSTENIDO"
+elif score_final >= 65:
+    perfil = "🟢 EQUILIBRADO Y FUNCIONAL"
+elif score_final >= 50:
+    perfil = "🟡 MODO SUPERVIVENCIA CONTROLADA"
+elif score_final >= 35:
+    perfil = "🟠 REACTIVO / FATIGADO"
+else:
+    perfil = "🔴 SOBRECARGA O COLAPSO"
+
+st.markdown(f"<h2 style='text-align: center; color: gold;'>{perfil}</h2>", unsafe_allow_html=True)
+st.progress(score_final / 100)
+st.metric("Nivel global de funcionamiento", f"{score_final:.1f}/100")
+
+st.subheader("Rasgos detallados")
+for rasgo, valor in rasgos.items():
+    st.progress(valor / 100)
+    st.write(f"**{rasgo}**: {valor}/100")
+
+st.subheader("Descripción narrativa")
+descripciones = {
+    "🦸‍♂️ TITÁN OPTIMIZADO": "Operas al límite superior de tu potencial genético. Alta claridad mental, resiliencia ante estrés, creatividad fluida y relaciones profundas. Puedes mantener este estado sostenidamente.",
+    "⚡ ALTO RENDIMIENTO SOSTENIDO": "Gran foco, energía abundante, emociones reguladas. Logras metas ambiciosas con consistencia y disfrutas el proceso.",
+    "🟢 EQUILIBRADO Y FUNCIONAL": "Días productivos, relaciones sanas, buen humor general. Hay margen para subir al siguiente nivel optimizando hábitos y entorno.",
+    "🟡 MODO SUPERVIVENCIA CONTROLADA": "Funcionas, pero con esfuerzo. Procrastinación ocasional, fatiga acumulada. Prioriza fisiología básica y reducción de estímulos negativos.",
+    "🟠 REACTIVO / FATIGADO": "Alta reactividad emocional, ansiedad frecuente, baja motivación. Necesitas intervención urgente en fisiología y entorno protector.",
+    "🔴 SOBRECARGA O COLAPSO": "Burnout, desconexión emocional, posible depresión. Enfócate exclusivamente en recuperación: sueño, nutrición, aislamiento de estresores."
+}
+st.write(descripciones[perfil])
+
+st.info("💡 **Consejo del sistema**: " + random.choice([
+    "Sube fisiología y hábitos para ganancias rápidas.",
+    "Aumenta conciencia para amplificar todos los cambios.",
+    "Optimiza entorno para proteger y potenciar ganancias.",
+    "Acepta tu núcleo genético y maximiza lo modificable."
+]))
+
+st.caption("Motherboard Humana v3.0 – Versión corregida y estable. ¡Disfruta experimentando con tu personalidad!")
