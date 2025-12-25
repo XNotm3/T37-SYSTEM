@@ -4,54 +4,89 @@ import random
 # === THEME T37 - FONDO NEGRO SÓLIDO + NEON SELECTIVO ===
 st.markdown("""
 <style>
-    .stApp {
-        background-color: #000000;
-    }
+    /* Fondo negro sólido */
+    .stApp { background-color: #000000; }
+    
+    /* Contenido principal */
     .main > div {
         background-color: rgba(10, 10, 10, 0.9);
         padding: 20px;
         border-radius: 15px;
     }
-    .stMarkdown, label, .stCaption {
+    
+    /* Texto general */
+    .stMarkdown, label, .stCaption, p {
         color: #e0e0e0 !important;
         font-family: 'Courier New', monospace;
     }
+    
+    /* Título y diagnóstico con neon azul */
     h1, .diagnostico-titulo {
         color: #00bfff !important;
         text-shadow: 0 0 20px #00bfff;
         text-align: center;
         font-size: 2.8rem !important;
     }
+    
     h2 { font-size: 1.8rem !important; color: #ffffff; }
+    
+    /* Progress bars neon azul */
     .stProgress > div > div > div > div {
         background: linear-gradient(to right, #00bfff, #0099ff) !important;
     }
+    
+    /* Sidebar */
     section[data-testid="stSidebar"] {
         background-color: #0a0a0a;
+    }
+    
+    /* Expander */
+    .streamlit-expanderHeader {
+        color: #00bfff;
     }
 </style>
 """, unsafe_allow_html=True)
 
 st.set_page_config(page_title="T37 PERSONALITY SYSTEM", layout="wide")
-st.title("🧠 T37 PERSONALITY SYSTEM")
-st.markdown("**SIMULADOR DETERMINISTA AVANZADO**")
-st.markdown("Cada capa se desglosa en componentes. El slider principal muestra la media automática.")
+st.title("🧠 T37 PERSONALITY SYSTEM v6.0")
+st.markdown("**SIMULADOR DETERMINISTA AVANZADO • TRANSFORMA TU SISTEMA PERSONAL**")
+st.markdown("Cada capa se desglosa en sus componentes causales más potentes. El slider global muestra la media automática.")
 st.markdown("---")
 
-# Inicializar sesión
-if "perfiles_guardados" not in st.session_state:
-    st.session_state.perfiles_guardados = {}
+# === Estado de sesión centralizado ===
+if "values" not in st.session_state:
+    st.session_state.values = {}
+if "perfiles" not in st.session_state:
+    st.session_state.perfiles = {}
 
-# Sidebar
-st.sidebar.header("MODOS RÁPIDOS")
+# === Valores por defecto ===
+default_values = {
+    # Núcleo
+    "gen_heredada": 50, "exp_prenatal": 50, "neuro_critico": 50,
+    # Profundas
+    "estilo_apego": 60, "esquemas_maladapt": 60, "narrativa_cultural": 60,
+    # Medias
+    "fisiologia_actual": 70, "habitos_ejecutivos": 70, "exp_adultas": 65,
+    # Externas
+    "personas_cercanas": 75, "contenido_consumido": 75, "espacio_fisico": 75,
+    "estado_momento": 80, "conciencia_interna": 60
+}
+
+# Inicializar valores si no existen
+for key, val in default_values.items():
+    if key not in st.session_state.values:
+        st.session_state.values[key] = val
+
+# === Sidebar ===
+st.sidebar.header("🎛️ MODOS RÁPIDOS")
 presets = {
     "Ninguno": None,
-    "🦸 TITÁN MÁXIMO": {"g1":70,"g2":80,"p1":75,"p2":70,"p3":80,"m1":90,"m2":95,"m3":85,"e1":90,"e2":90,"e3":90,"mom":95,"con":90},
-    "🧘 SABIO ESTOICO": {"g1":60,"g2":70,"p1":80,"p2":75,"p3":85,"m1":85,"m2":80,"m3":85,"e1":70,"e2":70,"e3":70,"mom":90,"con":95},
-    "🎨 FLOW CREATIVO": {"g1":65,"g2":75,"p1":70,"p2":75,"p3":80,"m1":90,"m2":75,"m3":80,"e1":85,"e2":85,"e3":85,"mom":95,"con":85},
-    "😈 SUPERVIVENCIA": {"g1":40,"g2":50,"p1":45,"p2":40,"p3":50,"m1":40,"m2":45,"m3":55,"e1":35,"e2":30,"e3":40,"mom":40,"con":45},
-    "⚡ SOCIAL CARISMÁTICO": {"g1":75,"g2":70,"p1":80,"p2":80,"p3":85,"m1":85,"m2":80,"m3":85,"e1":95,"e2":95,"e3":90,"mom":90,"con":80},
-    "🌙 RECUPERACIÓN": {"g1":55,"g2":60,"p1":65,"p2":65,"p3":70,"m1":95,"m2":65,"m3":70,"e1":60,"e2":60,"e3":60,"mom":85,"con":75},
+    "🦸 TITÁN MÁXIMO": {"gen_heredada":75,"exp_prenatal":70,"neuro_critico":70,"estilo_apego":85,"esquemas_maladapt":85,"narrativa_cultural":85,"fisiologia_actual":95,"habitos_ejecutivos":95,"exp_adultas":85,"personas_cercanas":90,"contenido_consumido":90,"espacio_fisico":90,"estado_momento":95,"conciencia_interna":90},
+    "🧘 SABIO ESTOICO": {"gen_heredada":65,"exp_prenatal":70,"neuro_critico":75,"estilo_apego":80,"esquemas_maladapt":75,"narrativa_cultural":90,"fisiologia_actual":85,"habitos_ejecutivos":80,"exp_adultas":85,"personas_cercanas":70,"contenido_consumido":70,"espacio_fisico":70,"estado_momento":90,"conciencia_interna":95},
+    "🎨 FLOW CREATIVO": {"gen_heredada":70,"exp_prenatal":65,"neuro_critico":65,"estilo_apego":75,"esquemas_maladapt":75,"narrativa_cultural":80,"fisiologia_actual":90,"habitos_ejecutivos":75,"exp_adultas":80,"personas_cercanas":85,"contenido_consumido":85,"espacio_fisico":85,"estado_momento":95,"conciencia_interna":85},
+    "😈 SUPERVIVENCIA": {"gen_heredada":45,"exp_prenatal":50,"neuro_critico":40,"estilo_apego":45,"esquemas_maladapt":40,"narrativa_cultural":50,"fisiologia_actual":40,"habitos_ejecutivos":45,"exp_adultas":55,"personas_cercanas":35,"contenido_consumido":30,"espacio_fisico":40,"estado_momento":40,"conciencia_interna":45},
+    "⚡ SOCIAL CARISMÁTICO": {"gen_heredada":75,"exp_prenatal":70,"neuro_critico":70,"estilo_apego":80,"esquemas_maladapt":80,"narrativa_cultural":85,"fisiologia_actual":85,"habitos_ejecutivos":80,"exp_adultas":85,"personas_cercanas":95,"contenido_consumido":95,"espacio_fisico":90,"estado_momento":90,"conciencia_interna":80},
+    "🌙 RECUPERACIÓN PROFUNDA": {"gen_heredada":55,"exp_prenatal":60,"neuro_critico":60,"estilo_apego":65,"esquemas_maladapt":65,"narrativa_cultural":70,"fisiologia_actual":95,"habitos_ejecutivos":65,"exp_adultas":70,"personas_cercanas":60,"contenido_consumido":60,"espacio_fisico":60,"estado_momento":85,"conciencia_interna":75},
 }
 
 preset = st.sidebar.selectbox("Selecciona modo", list(presets.keys()))
@@ -63,178 +98,177 @@ randomize = col2.button("RANDOM")
 
 st.sidebar.markdown("### PERFILES PERSONALES")
 nombre = st.sidebar.text_input("Nombre para guardar")
-guardar_btn = st.sidebar.button("GUARDAR ACTUAL")
+if st.sidebar.button("GUARDAR ACTUAL") and nombre:
+    st.session_state.perfiles[nombre] = st.session_state.values.copy()
+    st.sidebar.success(f"Guardado: {nombre}")
 
-cargar = st.sidebar.selectbox("Cargar perfil", [""] + list(st.session_state.perfiles_guardados.keys()))
+cargar = st.sidebar.selectbox("Cargar perfil", [""] + list(st.session_state.perfiles.keys()))
 
-# Defaults detallados
-defaults = {
-    "g1":50, "g2":50,  # Núcleo
-    "p1":60, "p2":60, "p3":60,  # Profundas
-    "m1":70, "m2":70, "m3":65,  # Medias
-    "e1":75, "e2":75, "e3":75,  # Externas entorno
-    "mom":80, "con":60
-}
-
-if preset != "Ninguno" and presets[preset] is not None:
-    defaults.update(presets[preset])
+# Aplicar preset o carga
+if preset != "Ninguno" and presets[preset]:
+    st.session_state.values.update(presets[preset])
 if cargar:
-    defaults.update(st.session_state.perfiles_guardados[cargar])
+    st.session_state.values.update(st.session_state.perfiles[cargar])
 
 if reset:
+    st.session_state.values = default_values.copy()
     st.rerun()
 if randomize:
-    defaults = {k: random.randint(30,90) for k in defaults}
+    st.session_state.values = {k: random.randint(30,90) for k in default_values}
     st.rerun()
 
-# Tabs con capas desglosadas
+# === Tabs con capas desglosadas ===
 tab1, tab2, tab3, tab4 = st.tabs(["🔴 NÚCLEO", "🟠 PROFUNDAS", "🟡 MEDIAS", "🟢 EXTERNAS"])
 
-# 🔴 NÚCLEO (5-10% modificable)
+# 🔴 NÚCLEO
 with tab1:
-    st.markdown("**MODIFICABILIDAD: 5-10%** (casi inmodificable – futuro edición genética)")
-    nucleo_global = (defaults.get("g1",50) + defaults.get("g2",50)) / 2
-    st.slider("NÚCLEO GLOBAL", 0,100, int(nucleo_global), disabled=True)
+    st.markdown("**MODIFICABILIDAD: 5-10%** – Casi inmodificable (futuro edición genética/epigenética)")
+    nucleo_media = (st.session_state.values["gen_heredada"] + st.session_state.values["exp_prenatal"] + st.session_state.values["neuro_critico"]) / 3
+    st.slider("NÚCLEO GLOBAL", 0, 100, int(nucleo_media), disabled=True)
 
-    col_slider, col_help = st.columns([4,1])
-    with col_slider:
-        g1 = st.slider("GENÉTICA HEREDADA", 0,100,defaults["g1"], key="g1")
-    with col_help:
+    col_s, col_h = st.columns([4,1])
+    with col_s:
+        st.session_state.values["gen_heredada"] = st.slider("GENÉTICA HEREDADA", 0,100,st.session_state.values["gen_heredada"])
+    with col_h:
         with st.expander("?"):
-            st.write("Temperamento innato, predisposiciones genéticas (ej. ansiedad, impulsividad).")
+            st.write("Variantes genéticas clave (serotonina, dopamina, CRHR1). Temperamento y resiliencia base.")
 
-    col_slider, col_help = st.columns([4,1])
-    with col_slider:
-        g2 = st.slider("EXPOSICIÓN PRENATAL", 0,100,defaults["g2"], key="g2")
-    with col_help:
+    col_s, col_h = st.columns([4,1])
+    with col_s:
+        st.session_state.values["exp_prenatal"] = st.slider("EXPOSICIÓN PRENATAL", 0,100,st.session_state.values["exp_prenatal"])
+    with col_h:
         with st.expander("?"):
-            st.write("Nutrición materna, estrés en útero, hormonas fetales.")
+            st.write("Estrés materno, hormonas fetales, nutrición en útero. Impacto permanente.")
 
-# 🟠 PROFUNDAS (20-40% modificable)
+    col_s, col_h = st.columns([4,1])
+    with col_s:
+        st.session_state.values["neuro_critico"] = st.slider("NEURODESARROLLO CRÍTICO (0-3 años)", 0,100,st.session_state.values["neuro_critico"])
+    with col_h:
+        with st.expander("?"):
+            st.write("Cableado permanente de amígdala y prefrontal. Volumen y conectividad base.")
+
+# 🟠 PROFUNDAS
 with tab2:
-    st.markdown("**MODIFICABILIDAD: 20-40%** (con terapia profunda y tiempo)")
-    profundas_global = (defaults.get("p1",60) + defaults.get("p2",60) + defaults.get("p3",60)) / 3
-    st.slider("PROFUNDAS GLOBAL", 0,100, int(profundas_global), disabled=True)
+    st.markdown("**MODIFICABILIDAD: 20-40%** – Requiere terapia profunda y tiempo")
+    profundas_media = (st.session_state.values["estilo_apego"] + st.session_state.values["esquemas_maladapt"] + st.session_state.values["narrativa_cultural"]) / 3
+    st.slider("PROFUNDAS GLOBAL", 0, 100, int(profundas_media), disabled=True)
 
-    col_slider, col_help = st.columns([4,1])
-    with col_slider:
-        p1 = st.slider("APEGO TEMPRANO (0-5 años)", 0,100,defaults["p1"], key="p1")
-    with col_help:
+    col_s, col_h = st.columns([4,1])
+    with col_s:
+        st.session_state.values["estilo_apego"] = st.slider("ESTILO DE APEGO", 0,100,st.session_state.values["estilo_apego"])
+    with col_h:
         with st.expander("?"):
-            st.write("Calidad del vínculo con cuidadores. Cableado básico de seguridad emocional.")
+            st.write("Seguro, ansioso, evitante o desorganizado. Modelo relacional internalizado.")
 
-    col_slider, col_help = st.columns([4,1])
-    with col_slider:
-        p2 = st.slider("ESQUEMAS INFANCIA/ADOLESCENCIA", 0,100,defaults["p2"], key="p2")
-    with col_help:
+    col_s, col_h = st.columns([4,1])
+    with col_s:
+        st.session_state.values["esquemas_maladapt"] = st.slider("ESQUEMAS MALADAPTATIVOS", 0,100,st.session_state.values["esquemas_maladapt"])
+    with col_h:
         with st.expander("?"):
-            st.write("Creencias núcleo sobre uno mismo y el mundo (ej. 'no soy suficiente').")
+            st.write("Creencias núcleo negativas (abandono, defectuosidad, perfeccionismo).")
 
-    col_slider, col_help = st.columns([4,1])
-    with col_slider:
-        p3 = st.slider("NARRATIVA CULTURAL", 0,100,defaults["p3"], key="p3")
-    with col_help:
+    col_s, col_h = st.columns([4,1])
+    with col_s:
+        st.session_state.values["narrativa_cultural"] = st.slider("NARRATIVA CULTURAL", 0,100,st.session_state.values["narrativa_cultural"])
+    with col_h:
         with st.expander("?"):
-            st.write("Valores, religión, normas de género absorbidas.")
+            st.write("Valores de éxito, género, moral religiosa o política internalizada.")
 
-# 🟡 MEDIAS (60-80% modificable)
+# 🟡 MEDIAS
 with tab3:
-    st.markdown("**MODIFICABILIDAD: 60-80%** (con disciplina y hábitos consistentes)")
-    medias_global = (defaults.get("m1",70) + defaults.get("m2",70) + defaults.get("m3",65)) / 3
-    st.slider("MEDIAS GLOBAL", 0,100, int(medias_global), disabled=True)
+    st.markdown("**MODIFICABILIDAD: 60-80%** – Con disciplina y hábitos consistentes")
+    medias_media = (st.session_state.values["fisiologia_actual"] + st.session_state.values["habitos_ejecutivos"] + st.session_state.values["exp_adultas"]) / 3
+    st.slider("MEDIAS GLOBAL", 0, 100, int(medias_media), disabled=True)
 
-    col_slider, col_help = st.columns([4,1])
-    with col_slider:
-        m1 = st.slider("FISIOLOGÍA ACTUAL", 0,100,defaults["m1"], key="m1")
-    with col_help:
+    col_s, col_h = st.columns([4,1])
+    with col_s:
+        st.session_state.values["fisiologia_actual"] = st.slider("FISIOLOGÍA ACTUAL", 0,100,st.session_state.values["fisiologia_actual"])
+    with col_h:
         with st.expander("?"):
-            st.write("Sueño, hormonas, dieta, ejercicio. Impacto rápido.")
+            st.write("Sueño, inflamación, eje HPA, niveles hormonales. Estado bioquímico del momento.")
 
-    col_slider, col_help = st.columns([4,1])
-    with col_slider:
-        m2 = st.slider("HÁBITOS DIARIOS", 0,100,defaults["m2"], key="m2")
-    with col_help:
+    col_s, col_h = st.columns([4,1])
+    with col_s:
+        st.session_state.values["habitos_ejecutivos"] = st.slider("HÁBITOS EJECUTIVOS", 0,100,st.session_state.values["habitos_ejecutivos"])
+    with col_h:
         with st.expander("?"):
-            st.write("Rutinas, disciplina, productividad entrenada.")
+            st.write("Control de impulsos, planificación, perseverancia entrenada.")
 
-    col_slider, col_help = st.columns([4,1])
-    with col_slider:
-        m3 = st.slider("EXPERIENCIAS ADULTAS ACUMULADAS", 0,100,defaults["m3"], key="m3")
-    with col_help:
+    col_s, col_h = st.columns([4,1])
+    with col_s:
+        st.session_state.values["exp_adultas"] = st.slider("EXPERIENCIAS ADULTAS REFORZANTES", 0,100,st.session_state.values["exp_adultas"])
+    with col_h:
         with st.expander("?"):
-            st.write("Relaciones, éxitos/fracasos laborales recientes.")
+            st.write("Éxitos repetidos o fracasos que moldean identidad actual.")
 
-# 🟢 EXTERNAS (90-100% modificable)
+# 🟢 EXTERNAS
 with tab4:
-    st.markdown("**MODIFICABILIDAD: 90-100%** (cambio rápido y accesible)")
-    externas_global = (defaults.get("e1",75) + defaults.get("e2",75) + defaults.get("e3",75) + defaults.get("mom",80) + defaults.get("con",60)) / 5
-    st.slider("EXTERNAS GLOBAL", 0,100, int(externas_global), disabled=True)
+    st.markdown("**MODIFICABILIDAD: 90-100%** – Cambio rápido y accesible")
+    entorno_media = (st.session_state.values["personas_cercanas"] + st.session_state.values["contenido_consumido"] + st.session_state.values["espacio_fisico"]) / 3
+    st.slider("ENTORNO GLOBAL", 0, 100, int(entorno_media), disabled=True)
 
-    st.markdown("**ENTORNO INMEDIATO**")
-    entorno_global = (defaults.get("e1",75) + defaults.get("e2",75) + defaults.get("e3",75)) / 3
-    st.slider("ENTORNO GLOBAL", 0,100, int(entorno_global), disabled=True)
+    externas_media = (entorno_media + st.session_state.values["estado_momento"] + st.session_state.values["conciencia_interna"]) / 3
+    st.slider("EXTERNAS GLOBAL", 0, 100, int(externas_media), disabled=True)
 
-    col_slider, col_help = st.columns([4,1])
-    with col_slider:
-        e1 = st.slider("PERSONAS CERCANAS", 0,100,defaults["e1"], key="e1")
-    with col_help:
+    col_s, col_h = st.columns([4,1])
+    with col_s:
+        st.session_state.values["personas_cercanas"] = st.slider("PERSONAS CERCANAS", 0,100,st.session_state.values["personas_cercanas"])
+    with col_h:
         with st.expander("?"):
-            st.write("Calidad emocional de familia, pareja, amigos.")
+            st.write("Calidad emocional diaria de relaciones cercanas.")
 
-    col_slider, col_help = st.columns([4,1])
-    with col_slider:
-        e2 = st.slider("CONTENIDO CONSUMIDO", 0,100,defaults["e2"], key="e2")
-    with col_help:
+    col_s, col_h = st.columns([4,1])
+    with col_s:
+        st.session_state.values["contenido_consumido"] = st.slider("CONTENIDO CONSUMIDO", 0,100,st.session_state.values["contenido_consumido"])
+    with col_h:
         with st.expander("?"):
-            st.write("Redes, noticias, libros, música. Lo que entra moldea tu mente.")
+            st.write("Redes, noticias, conversaciones. Priming cognitivo constante.")
 
-    col_slider, col_help = st.columns([4,1])
-    with col_slider:
-        e3 = st.slider("ESPACIO FÍSICO", 0,100,defaults["e3"], key="e3")
-    with col_help:
+    col_s, col_h = st.columns([4,1])
+    with col_s:
+        st.session_state.values["espacio_fisico"] = st.slider("ESPACIO FÍSICO", 0,100,st.session_state.values["espacio_fisico"])
+    with col_h:
         with st.expander("?"):
-            st.write("Orden, luz, ruido, ergonomía del entorno.")
+            st.write("Orden, luz, ruido, ergonomía. Impacto sensorial continuo.")
 
-    col_slider, col_help = st.columns([4,1])
-    with col_slider:
-        mom = st.slider("ESTADO MOMENTO-A-MOMENTO", 0,100,defaults["mom"], key="mom")
-    with col_help:
+    col_s, col_h = st.columns([4,1])
+    with col_s:
+        st.session_state.values["estado_momento"] = st.slider("ESTADO MOMENTO-A-MOMENTO", 0,100,st.session_state.values["estado_momento"])
+    with col_h:
         with st.expander("?"):
-            st.write("Glucosa, fatiga, postura actual. Fluctúa rápido.")
+            st.write("Glucosa, fatiga, postura. Priming corporal inmediato.")
 
-    col_slider, col_help = st.columns([4,1])
-    with col_slider:
-        con = st.slider("CONCIENCIA INTERNA", 0,100,defaults["con"], key="con")
-    with col_help:
+    col_s, col_h = st.columns([4,1])
+    with col_s:
+        st.session_state.values["conciencia_interna"] = st.slider("CONCIENCIA INTERNA", 0,100,st.session_state.values["conciencia_interna"])
+    with col_h:
         with st.expander("?"):
-            st.write("Meditación, terapia, reflexión. Amplificador universal.")
-
-# Guardar perfil
-if guardar_btn and nombre:
-    datos = {k:v for k, v in locals().items() if k in defaults}
-    st.session_state.perfiles_guardados[nombre] = datos
-    st.sidebar.success(f"Guardado: {nombre}")
+            st.write("Meditación, terapia, metacognición. Amplificador de todas las capas modificables.")
 
 st.markdown("---")
 st.header("🧬 DIAGNÓSTICO DE SISTEMA")
 
-# Cálculo con nuevas variables
-nucleo = (g1 + g2) / 2 / 100
-profundas = (p1 + p2 + p3) / 3 / 100
-medias = (m1 + m2 + m3) / 3 / 100
-externas = ((e1 + e2 + e3)/3 + mom + con) / 3 / 100
+# Cálculo preciso
+v = st.session_state.values
 
-amp = (con / 100) ** 0.6
+nucleo = (v["gen_heredada"] + v["exp_prenatal"] + v["neuro_critico"]) / 3 / 100
+profundas = (v["estilo_apego"] + v["esquemas_maladapt"] + v["narrativa_cultural"]) / 3 / 100
+medias = (v["fisiologia_actual"] + v["habitos_ejecutivos"] + v["exp_adultas"]) / 3 / 100
+entorno = (v["personas_cercanas"] + v["contenido_consumido"] + v["espacio_fisico"]) / 3 / 100
+externas = (entorno + v["estado_momento"] / 100 + v["conciencia_interna"] / 100) / 3
+
+amp = (v["conciencia_interna"] / 100) ** 0.6
 
 score = (nucleo * 0.25 + profundas * 0.20 + medias * 0.30 + externas * 0.25) * 100 * amp
 
+# Rasgos
 rasgos = {
-    "RESILIENCIA": round(nucleo*50 + medias*40 + con/100*10,1),
-    "FOCO": round(m2/100*60 + m1/100*30 + mom/100*10,1),
-    "EMPATÍA": round(profundas*40 + (e1+e2+e3)/300*40,1),
-    "CREATIVIDAD": round(nucleo*30 + externas*50 + con/100*20,1),
-    "BAJA ANSIEDAD": round(100 - (nucleo*40 + m1/100*40 + (e1+e2+e3)/300*20),1),
-    "AUTOESTIMA": round(profundas*50 + m3/100*40 + con/100*10,1),
+    "RESILIENCIA": round(nucleo*60 + medias*30 + v["conciencia_interna"]/100*10,1),
+    "FOCO": round(v["habitos_ejecutivos"]/100*60 + v["fisiologia_actual"]/100*30 + v["estado_momento"]/100*10,1),
+    "EMPATÍA": round(profundas*50 + entorno*40 + v["conciencia_interna"]/100*10,1),
+    "CREATIVIDAD": round(nucleo*30 + externas*50 + v["conciencia_interna"]/100*20,1),
+    "BAJA ANSIEDAD": round(100 - (nucleo*40 + v["fisiologia_actual"]/100*40 + entorno*20),1),
+    "AUTOESTIMA": round(profundas*50 + v["exp_adultas"]/100*40 + v["conciencia_interna"]/100*10,1),
 }
 
 if score >= 90: perfil, emoji = "TITÁN OPTIMIZADO", "🦸"
@@ -255,17 +289,18 @@ for rasgo, val in rasgos.items():
 
 st.subheader("DESCRIPCIÓN")
 desc = {
-    "TITÁN OPTIMIZADO": "Sistema al máximo. Flujo y claridad total.",
-    "ALTO RENDIMIENTO": "Energía óptima y regulación perfecta.",
-    "EQUILIBRADO": "Funcionamiento sólido con potencial alto.",
-    "SUPERVIVENCIA": "Operativo pero forzado.",
-    "REACTIVO": "Alta carga emocional.",
-    "SOBRECARGA": "Sistema en riesgo."
+    "TITÁN OPTIMIZADO": "Operas cerca del máximo de tu rango genético. Flujo, resiliencia y claridad sostenida.",
+    "ALTO RENDIMIENTO": "Energía abundante, foco consistente y regulación emocional óptima.",
+    "EQUILIBRADO": "Funcionamiento sólido con amplio margen para upgrades.",
+    "SUPERVIVENCIA": "Operativo pero con esfuerzo. Prioriza recuperación.",
+    "REACTIVO": "Alta reactividad emocional. Intervención urgente en fisiología y entorno.",
+    "SOBRECARGA": "Sistema en riesgo. Modo protección: descanso y aislamiento de estresores."
 }
 st.write(desc[perfil])
 
-st.success(f"**BOTTLENECK**: {min(rasgos, key=rasgos.get)} → Prioriza esta área")
+bottleneck = min(rasgos, key=rasgos.get)
+st.success(f"**BOTTLENECK**: {bottleneck} → Ataca primero esta área")
 
-st.info("💡 CONSEJO: Las capas externas son tu mayor palanca ahora mismo.")
+st.info("💡 CONSEJO: Las capas externas y medias son tu mayor palanca de cambio inmediato.")
 
-st.caption("T37 PERSONALITY SYSTEM v5.0 • Edición Desglosada por Componentes")
+st.caption("T37 PERSONALITY SYSTEM v6.0 • Edición Causal Profunda • Tu herramienta de transformación real")
