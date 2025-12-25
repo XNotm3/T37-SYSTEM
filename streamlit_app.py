@@ -218,7 +218,7 @@ with tab4:
 st.markdown("---")
 st.header("🧬 DIAGNÓSTICO DE SISTEMA")
 
-# Cálculo con .get() para seguridad absoluta
+# Cálculo con .get() para seguridad
 v = st.session_state.values
 
 nucleo = (v.get("gen_heredada", 50) + v.get("exp_prenatal", 50) + v.get("neuro_critico", 50)) / 3 / 100
@@ -231,7 +231,7 @@ amp = (v.get("conciencia_interna", 60) / 100) ** 0.6
 
 score = (nucleo * 0.25 + profundas * 0.20 + medias * 0.30 + externas * 0.25) * 100 * amp
 
-# Rasgos (con .get() también)
+# Rasgos
 rasgos = {
     "RESILIENCIA": round(nucleo*60 + medias*30 + v.get("conciencia_interna", 60)/100*10,1),
     "FOCO": round(v.get("habitos_ejecutivos", 70)/100*60 + v.get("fisiologia_actual", 70)/100*30 + v.get("estado_momento", 80)/100*10,1),
