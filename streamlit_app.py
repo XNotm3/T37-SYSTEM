@@ -7,7 +7,7 @@ st.markdown("**Simulador Determinista Avanzado inspirado en Robert Sapolsky**")
 st.markdown("Modifica cada componente de tu 'hardware mental' y observa cómo se transforma tu personalidad resultante en tiempo real.")
 st.markdown("---")
 
-# Sidebar para presets de "Modos de Personalidad"
+# Sidebar para presets
 st.sidebar.header("🎛️ Modos Preprogramados (Switch rápido)")
 presets = {
     "Ninguno": None,
@@ -21,7 +21,7 @@ presets = {
 
 preset_seleccionado = st.sidebar.selectbox("Elige un modo preprogramado", options=list(presets.keys()))
 
-# Tabs para organizar las capas
+# Tabs
 tab1, tab2, tab3, tab4 = st.tabs(["🔴 Núcleo Inmutable", "🟠 Capas Profundas", "🟡 Capas Medias", "🟢 Capas Externas & BIOS"])
 
 # Valores por defecto
@@ -31,7 +31,7 @@ defaults = {
     "entorno": 75, "estado_momento": 80, "conciencia": 60
 }
 
-if preset_seleccionado != "Ninguno" and preset_seleccionado is not None:
+if preset_seleccionado != "Ninguno" and presets[preset_seleccionado] is not None:
     defaults.update(presets[preset_seleccionado])
 
 with tab1:
@@ -63,95 +63,48 @@ with tab4:
 st.markdown("---")
 st.header("🧬 PERSONALIDAD RESULTANTE")
 
-# Cálculo avanzado ponderado con realismo determinista
-# 1. Base genética fija el rango posible
-rango_genetico = genetica / 100  # 0.0 a 1.0 → tu "potencial máximo teórico"
+# === CÁLCULO CORREGIDO Y ESTABLE ===
+# Convertimos todo a 0-1 para evitar errores
+g = genetica / 100
+n = neuro_temprano / 100
+e = esquemas_infancia / 100
+cult = narrativa_cultural / 100
+f = fisiologia / 100
+h = habitos / 100
+exp = experiencias_adultas / 100
+ent = entorno / 100
+mom = estado_momento / 100
+con = conciencia / 100
 
-# 2. Neurodesarrollo temprano limita el rango efectivo
-rango_efectivo = rango_genetico * 0.7 + (neuro_temprano / 100) * 0.3
+# 1. Rango genético base
+rango_genetico = g
 
-# 3. Modulación por capas superiores (pero no pueden exceder el rango efectivo)
-mod_creencias = (esquemas_infancia + narrativa_cultural) / 200
-mod_fisiologia_habitos = (fisiologia + habitos + experiencias_adultas) / 300
-mod_externo = (entorno + estado_momento) / 200
+# 2. Rango efectivo tras neurodesarrollo temprano
+rango_efectivo = rango_genetico * 0.7 + n * 0.3
 
-# 4. Amplificación por conciencia (raíz cuadrada para efecto realista: mucho esfuerzo = gran ganancia, pero diminishing returns)
-amplificador_conciencia = (conciencia / 100) ** 0.6
+# 3. Moduladores
+mod_creencias = (e + cult) / 2
+mod_fisiologia_habitos = (f + h + exp) / 3
+mod_externo = (ent + mom) / 2
 
-# Personalidad final
-score_bruto = (
+# 4. Amplificador por conciencia (diminishing returns)
+amplificador_conciencia = con ** 0.6
+
+# 5. Score final
+score_final = (
     rango_efectivo * 0.35 +
     mod_creencias * 0.15 +
     mod_fisiologia_habitos * 0.25 +
     mod_externo * 0.25
-) * 100
+) * 100 * amplificador_conciencia
 
-score_final = score_bruto * amplificador_conciencia
-
-# Rasgos específicos detallados
+# Rasgos específicos
 rasgos = {
-    "Resiliencia emocional": round(rango_efectivo*50 + mod_fisiologia_habitos*40 + conciencia*0.1, 1),
-    "Foco y productividad": round(mod_habitos*0.6 + fisiologia*0.3 + estado_momento*0.1, 1),
-    "Empatía y conexión social": round(mod_creencias*0.4 + entorno*0.4 + narrativa_cultural*0.2, 1),
-    "Creatividad y apertura": round(rango_genetico*30 + mod_externo*50 + conciencia*20, 1),
-    "Reactividad/Ansiedad": round(100 - (neuro_temprano*0.4 + fisiologia*0.4 + entorno*0.2), 1),
-    "Autoestima estable": round(esquemas_infancia*0.5 + experiencias_adultas*0.4 + conciencia*0.1, 1),
-}
-
-# Perfil global
-if score_final >= 90:
-    perfil = "🦸‍♂️ TITÁN OPTIMIZADO"
-    color = "gold"
-elif score_final >= 80:
-    perfil = "⚡ ALTO RENDIMIENTO SOSTENIDO"
-    color = "green"
-elif score_final >= 65:
-    perfil = "🟢 EQUILIBRADO Y FUNCIONAL"
-    color = "lightgreen"
-elif score_final >= 50:
-    perfil = "🟡 MODO SUPERVIVENCIA CONTROLADA"
-    color = "orange"
-elif score_final >= 35:
-    perfil = "🟠 REACTIVO / FATIGADO"
-    color = "red"
-else:
-    perfil = "🔴 SOBRECARGA O COLAPSO"
-    color = "darkred"
-
-st.markdown(f"<h2 style='color:{color};'>{perfil}</h2>", unsafe_allow_html=True)
-st.progress(score_final / 100)
-st.metric("Nivel global de funcionamiento", f"{score_final:.1f}/100")
-
-st.subheader("Rasgos detallados")
-for rasgo, valor in rasgos.items():
-    st.write(f"**{rasgo}**: {valor}/100")
-
-st.subheader("Descripción narrativa")
-descripciones = {
-    "🦸‍♂️ TITÁN OPTIMIZADO": "Operas al límite superior de tu potencial genético. Alta claridad mental, resiliencia ante estrés, creatividad fluida y relaciones profundas. Puedes mantener este estado sostenidamente.",
-    "⚡ ALTO RENDIMIENTO SOSTENIDO": "Gran foco, energía abundante, emociones reguladas. Logras metas ambiciosas con consistencia y disfrutas el proceso.",
-    "🟢 EQUILIBRADO Y FUNCIONAL": "Días productivos, relaciones sanas, buen humor general. Hay margen para subir al siguiente nivel optimizando hábitos y entorno.",
-    "🟡 MODO SUPERVIVENCIA CONTROLADA": "Funcionas, pero con esfuerzo. Procrastinación ocasional, fatiga acumulada. Prioriza fisiología básica y reducción de estímulos negativos.",
-    "🟠 REACTIVO / FATIGADO": "Alta reactividad emocional, ansiedad frecuente, baja motivación. Necesitas intervención urgente en fisiología y entorno protector.",
-    "🔴 SOBRECARGA O COLAPSO": "Burnout, desconexión emocional, posible depresión. Enfócate exclusivamente en recuperación: sueño, nutrición, aislamiento de estresores."
-}
-
-st.write(descripciones[perfil])
-
-st.info("💡 **Consejo automático**: "
-        + random.choice([
-            "Sube fisiología y hábitos para ganancias rápidas.",
-            "Trabaja conciencia para amplificar todos los cambios.",
-            "Optimiza entorno para proteger ganancias.",
-            "Acepta tu núcleo genético y maximiza lo modificable."
-        ]))
-
-st.caption("""
-**Modelo v3.0 ampliado**  
-- 10 parámetros ajustables  
-- 6 modos preprogramados  
-- Cálculo realista con límites genéticos  
-- Rasgos específicos + descripción narrativa  
+    "Resiliencia emocional": round(rango_efectivo * 50 + mod_fisiologia_habitos * 40 + con * 10, 1),
+    "Foco y productividad": round(h * 60 + f * 30 + mom * 10, 1),
+    "Empatía y conexión social": round(mod_creencias * 40 + ent * 40 + cult * 20, 1),
+    "Creatividad y apertura": round(rango_genetico * 30 + mod_externo * 50 + con * 20, 1),
+    "Reactividad/Ans
 - Amplificación no lineal por conciencia  
 Despliégalo en Streamlit Cloud y compártelo con quien quieras. ¡Experimenta libremente!
 """)
