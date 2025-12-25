@@ -88,21 +88,36 @@ rasgos = {
     "Autoestima estable": round(e * 50 + exp * 40 + con * 10, 1),
 }
 
-# Perfil
+# Perfil global (con clave simple para el diccionario)
 if score_final >= 90:
-    perfil = "🦸‍♂️ TITÁN OPTIMIZADO"
+    perfil = "TITÁN OPTIMIZADO"
 elif score_final >= 80:
-    perfil = "⚡ ALTO RENDIMIENTO"
+    perfil = "ALTO RENDIMIENTO"
 elif score_final >= 65:
-    perfil = "🟢 EQUILIBRADO"
+    perfil = "EQUILIBRADO"
 elif score_final >= 50:
-    perfil = "🟡 SUPERVIVENCIA CONTROLADA"
+    perfil = "SUPERVIVENCIA CONTROLADA"
 elif score_final >= 35:
-    perfil = "🟠 REACTIVO"
+    perfil = "REACTIVO"
 else:
-    perfil = "🔴 SOBRECARGA"
+    perfil = "SOBRECARGA"
 
-st.markdown(f"<h2 style='text-align: center;'>{perfil}</h2>", unsafe_allow_html=True)
+# Mostrar perfil con emoji correspondiente
+emoji_perfil = ""
+if "TITÁN" in perfil:
+    emoji_perfil = "🦸 "
+elif "ALTO RENDIMIENTO" in perfil:
+    emoji_perfil = "⚡ "
+elif "EQUILIBRADO" in perfil:
+    emoji_perfil = "🟢 "
+elif "SUPERVIVENCIA" in perfil:
+    emoji_perfil = "🟡 "
+elif "REACTIVO" in perfil:
+    emoji_perfil = "🟠 "
+else:
+    emoji_perfil = "🔴 "
+
+st.markdown(f"<h2 style='text-align: center;'>{emoji_perfil}{perfil}</h2>", unsafe_allow_html=True)
 st.progress(score_final / 100)
 st.metric("Nivel global", f"{score_final:.1f}/100")
 
@@ -111,17 +126,23 @@ for rasgo, valor in rasgos.items():
     st.progress(valor / 100)
     st.caption(f"**{rasgo}**: {valor}/100")
 
-st.subheader("Descripción")
-desc = {
-    "🦸‍♂️ TITÁN OPTIMIZADO": "Máximo potencial desbloqueado. Claridad, resiliencia y flujo constante.",
-    "⚡ ALTO RENDIMIENTO": "Energía alta, foco sostenido y emociones reguladas.",
-    "🟢 EQUILIBRADO": "Buen funcionamiento diario con margen de mejora.",
-    "🟡 SUPERVIVENCIA CONTROLADA": "Funcionas, pero con esfuerzo extra.",
-    "🟠 REACTIVO": "Alta reactividad y fatiga. Prioriza recuperación.",
-    "🔴 SOBRECARGA": "Burnout. Enfócate solo en lo básico: sueño y protección."
+st.subheader("Descripción narrativa")
+descripciones = {
+    "TITÁN OPTIMIZADO": "Operas al límite superior de tu potencial genético. Alta claridad mental, resiliencia ante estrés, creatividad fluida y relaciones profundas. Estado sostenido de excelencia.",
+    "ALTO RENDIMIENTO": "Gran foco, energía abundante y emociones bien reguladas. Logras metas ambiciosas con consistencia y disfrutas el proceso.",
+    "EQUILIBRADO": "Días productivos, relaciones sanas y buen humor general. Tienes un buen funcionamiento diario con amplio margen para optimizar.",
+    "SUPERVIVENCIA CONTROLADA": "Funcionas correctamente, pero requiere esfuerzo. Procrastinación ocasional y fatiga acumulada. Prioriza lo básico.",
+    "REACTIVO": "Alta reactividad emocional, ansiedad frecuente y baja motivación. Necesitas intervención urgente en fisiología y entorno.",
+    "SOBRECARGA": "Burnout o colapso emocional. Enfócate exclusivamente en recuperación: sueño, nutrición y aislamiento de estresores."
 }
-st.write(desc[perfil.split(" ",1)[1] if " " in perfil else perfil])
 
-st.info("💡 Consejo: " + random.choice(["Optimiza fisiología", "Aumenta conciencia", "Mejora entorno", "Acepta tu núcleo"]))
+st.write(descripciones[perfil])
 
-st.caption("Motherboard Humana v3.0 – Versión limpia y funcional")
+st.info("💡 **Consejo del sistema**: " + random.choice([
+    "Sube fisiología y hábitos para ganancias rápidas.",
+    "Aumenta conciencia para amplificar todos los cambios.",
+    "Optimiza entorno para proteger y potenciar ganancias.",
+    "Acepta tu núcleo genético y maximiza lo modificable."
+]))
+
+st.caption("Motherboard Humana v3.0 – Versión final 100% estable. ¡Disfruta experimentando con tu mente!")
