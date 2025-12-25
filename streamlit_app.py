@@ -1,51 +1,77 @@
 import streamlit as st
 import random
 
-# === THEME T37 CYBERPUNK CIRCUIT BOARD ===
+# === THEME T37 CYBERPUNK - FONDO NEGRO CON CIRCUITOS NEON AZULES ===
 st.markdown("""
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
 <style>
+    /* Fondo negro sólido con circuitos neon azules */
     .stApp {
-        background-image: url("https://img.freepik.com/free-vector/realistic-neon-lights-background_23-2148904874.jpg?w=2000");
+        background-image: url("https://images.stockcake.com/public/d/d/7/dd7c8de0-80a7-4a1e-b49e-4ef9e4f740ab_large/neon-circuit-glow-stockcake.jpg");
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
+        background-color: #000000; /* Fallback negro sólido */
     }
+    
+    /* Overlay oscuro para contenido */
     .main > div {
-        background-color: rgba(0, 0, 30, 0.85);
+        background-color: rgba(0, 0, 0, 0.85);
         padding: 30px;
         border-radius: 20px;
         backdrop-filter: blur(12px);
-        border: 3px solid #00ffea;
-        box-shadow: 0 0 40px rgba(0, 255, 234, 0.6);
+        border: 3px solid #00bfff; /* Borde azul neon */
+        box-shadow: 0 0 40px rgba(0, 191, 255, 0.6);
     }
+    
+    /* Texto neon azul glow */
     h1, h2, h3, h4, .stMarkdown, label, .stCaption {
-        color: #00ffea !important;
-        text-shadow: 0 0 25px #00ffea;
+        color: #00bfff !important; /* Azul neon intenso */
+        text-shadow: 0 0 25px #00bfff, 0 0 15px #0099ff;
         font-family: 'Orbitron', monospace !important;
     }
+    
     h1 { font-size: 3.8rem !important; text-align: center; }
+    
+    /* Sliders neon azul */
     .stSlider > div > div > div > div {
-        background: linear-gradient(to right, #00ff41, #00ffff) !important;
+        background: linear-gradient(to right, #00bfff, #0099ff) !important;
+        height: 10px !important;
+        border-radius: 8px;
     }
+    
+    /* Botones neon azul */
     button[kind="primary"] {
-        background: linear-gradient(#00ff41, #008822) !important;
-        color: black !important;
-        box-shadow: 0 0 30px #00ff41;
+        background: linear-gradient(#00bfff, #0066cc) !important;
+        color: white !important;
+        box-shadow: 0 0 30px #00bfff;
+        border: none !important;
+        font-weight: bold;
     }
+    
+    /* Sidebar */
     section[data-testid="stSidebar"] {
-        background-color: rgba(0, 15, 50, 0.95);
-        border-right: 5px solid #00ffea;
+        background-color: rgba(0, 0, 30, 0.95);
+        border-right: 5px solid #00bfff;
+        box-shadow: 0 0 40px rgba(0, 191, 255, 0.8);
     }
+    
+    /* Progress bars neon azul */
     .stProgress > div > div > div > div {
-        background: linear-gradient(to right, #00ffff, #00ff41) !important;
+        background: linear-gradient(to right, #00bfff, #0099ff) !important;
+    }
+    
+    /* Tabs neon azul */
+    .stTabs [data-baseweb="tab"] {
+        color: #00bfff !important;
+        text-shadow: 0 0 15px #00bfff;
     }
 </style>
 """, unsafe_allow_html=True)
 
 st.set_page_config(page_title="T37 PERSONALITY SYSTEM", layout="wide")
 st.title("🧠 T37 PERSONALITY SYSTEM")
-st.markdown("**SIMULADOR DETERMINISTA • TRANSFORMA TU SISTEMA**")
+st.markdown("**SIMULADOR DETERMINISTA AVANZADO • TRANSFORMA TU SISTEMA**")
 st.markdown("Diagnostica y optimiza tu mente como una motherboard futurista")
 st.markdown("---")
 
@@ -81,7 +107,7 @@ cargar = st.sidebar.selectbox("Cargar perfil guardado", [""] + list(st.session_s
 # Defaults
 defaults = {"g":50,"n":50,"e":60,"c":60,"f":70,"h":70,"exp":65,"ent":75,"mom":80,"con":60}
 
-# Aplicar preset o cargar perfil
+# Aplicar preset o cargar
 if preset != "Ninguno" and presets[preset] is not None:
     defaults.update(presets[preset])
 if cargar:
@@ -118,7 +144,7 @@ with tab4:
     mom = st.slider("ESTADO MOMENTO",0,100,defaults["mom"],help="Energía actual.")
     con = st.slider("CONCIENCIA INTERNA",0,100,defaults["con"],help="Meditación y terapia.")
 
-# Guardar perfil después de sliders
+# Guardar perfil
 if guardar_btn and nombre:
     datos = {"g":g,"n":n,"e":e,"c":c,"f":f,"h":h,"exp":exp,"ent":ent,"mom":mom,"con":con}
     st.session_state.perfiles_guardados[nombre] = datos
@@ -178,4 +204,4 @@ st.success(f"**BOTTLENECK**: {min(rasgos, key=rasgos.get)} → Prioriza esta ár
 
 st.info("💡 CONSEJO: " + random.choice(["Fisiología primero", "Conciencia amplifica todo", "Limpia entorno", "Maximiza lo modificable"]))
 
-st.caption("T37 PERSONALITY SYSTEM v4.0 • Cyberpunk Edition • Tu herramienta personal")
+st.caption("T37 PERSONALITY SYSTEM v4.0 • Neon Blue Circuit Edition")
