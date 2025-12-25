@@ -15,7 +15,7 @@ st.markdown("""
     }
     
     /* Texto general */
-    .stMarkdown, label, .stCaption, p {
+    .stMarkdown, label, .stCaption {
         color: #e0e0e0 !important;
         font-family: 'Courier New', monospace;
     }
@@ -39,11 +39,6 @@ st.markdown("""
     section[data-testid="stSidebar"] {
         background-color: #0a0a0a;
     }
-    
-    /* Expander */
-    .streamlit-expanderHeader {
-        color: #00bfff;
-    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -52,12 +47,6 @@ st.title("🧠 T37 PERSONALITY SYSTEM v6.0")
 st.markdown("**SIMULADOR DETERMINISTA AVANZADO • TRANSFORMA TU SISTEMA PERSONAL**")
 st.markdown("Cada capa se desglosa en sus componentes causales más potentes. El slider global muestra la media automática.")
 st.markdown("---")
-
-# === Estado de sesión centralizado ===
-if "values" not in st.session_state:
-    st.session_state.values = {}
-if "perfiles" not in st.session_state:
-    st.session_state.perfiles = {}
 
 # === Valores por defecto ===
 default_values = {
@@ -72,7 +61,14 @@ default_values = {
     "estado_momento": 80, "conciencia_interna": 60
 }
 
-# Inicializar valores si no existen
+# === Estado de sesión centralizado (CORREGIDO) ===
+if "values" not in st.session_state:
+    st.session_state.values = default_values.copy()
+
+if "perfiles" not in st.session_state:
+    st.session_state.perfiles = {}
+
+# Asegurar que todos los valores existan
 for key, val in default_values.items():
     if key not in st.session_state.values:
         st.session_state.values[key] = val
@@ -105,7 +101,7 @@ if st.sidebar.button("GUARDAR ACTUAL") and nombre:
 cargar = st.sidebar.selectbox("Cargar perfil", [""] + list(st.session_state.perfiles.keys()))
 
 # Aplicar preset o carga
-if preset != "Ninguno" and presets[preset]:
+if preset != "Ninguno" and presets[preset] is not None:
     st.session_state.values.update(presets[preset])
 if cargar:
     st.session_state.values.update(st.session_state.perfiles[cargar])
@@ -128,21 +124,21 @@ with tab1:
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        st.session_state.values["gen_heredada"] = st.slider("GENÉTICA HEREDADA", 0,100,st.session_state.values["gen_heredada"])
+        st.session_state.values["gen_heredada"] = st.slider("GENÉTICA HEREDADA", 0,100,st.session_state.values["gen_heredada"], key="gen_heredada")
     with col_h:
         with st.expander("?"):
             st.write("Variantes genéticas clave (serotonina, dopamina, CRHR1). Temperamento y resiliencia base.")
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        st.session_state.values["exp_prenatal"] = st.slider("EXPOSICIÓN PRENATAL", 0,100,st.session_state.values["exp_prenatal"])
+        st.session_state.values["exp_prenatal"] = st.slider("EXPOSICIÓN PRENATAL", 0,100,st.session_state.values["exp_prenatal"], key="exp_prenatal")
     with col_h:
         with st.expander("?"):
             st.write("Estrés materno, hormonas fetales, nutrición en útero. Impacto permanente.")
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        st.session_state.values["neuro_critico"] = st.slider("NEURODESARROLLO CRÍTICO (0-3 años)", 0,100,st.session_state.values["neuro_critico"])
+        st.session_state.values["neuro_critico"] = st.slider("NEURODESARROLLO CRÍTICO (0-3 años)", 0,100,st.session_state.values["neuro_critico"], key="neuro_critico")
     with col_h:
         with st.expander("?"):
             st.write("Cableado permanente de amígdala y prefrontal. Volumen y conectividad base.")
@@ -155,21 +151,21 @@ with tab2:
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        st.session_state.values["estilo_apego"] = st.slider("ESTILO DE APEGO", 0,100,st.session_state.values["estilo_apego"])
+        st.session_state.values["estilo_apego"] = st.slider("ESTILO DE APEGO", 0,100,st.session_state.values["estilo_apego"], key="estilo_apego")
     with col_h:
         with st.expander("?"):
             st.write("Seguro, ansioso, evitante o desorganizado. Modelo relacional internalizado.")
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        st.session_state.values["esquemas_maladapt"] = st.slider("ESQUEMAS MALADAPTATIVOS", 0,100,st.session_state.values["esquemas_maladapt"])
+        st.session_state.values["esquemas_maladapt"] = st.slider("ESQUEMAS MALADAPTATIVOS", 0,100,st.session_state.values["esquemas_maladapt"], key="esquemas_maladapt")
     with col_h:
         with st.expander("?"):
             st.write("Creencias núcleo negativas (abandono, defectuosidad, perfeccionismo).")
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        st.session_state.values["narrativa_cultural"] = st.slider("NARRATIVA CULTURAL", 0,100,st.session_state.values["narrativa_cultural"])
+        st.session_state.values["narrativa_cultural"] = st.slider("NARRATIVA CULTURAL", 0,100,st.session_state.values["narrativa_cultural"], key="narrativa_cultural")
     with col_h:
         with st.expander("?"):
             st.write("Valores de éxito, género, moral religiosa o política internalizada.")
@@ -182,21 +178,21 @@ with tab3:
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        st.session_state.values["fisiologia_actual"] = st.slider("FISIOLOGÍA ACTUAL", 0,100,st.session_state.values["fisiologia_actual"])
+        st.session_state.values["fisiologia_actual"] = st.slider("FISIOLOGÍA ACTUAL", 0,100,st.session_state.values["fisiologia_actual"], key="fisiologia_actual")
     with col_h:
         with st.expander("?"):
             st.write("Sueño, inflamación, eje HPA, niveles hormonales. Estado bioquímico del momento.")
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        st.session_state.values["habitos_ejecutivos"] = st.slider("HÁBITOS EJECUTIVOS", 0,100,st.session_state.values["habitos_ejecutivos"])
+        st.session_state.values["habitos_ejecutivos"] = st.slider("HÁBITOS EJECUTIVOS", 0,100,st.session_state.values["habitos_ejecutivos"], key="habitos_ejecutivos")
     with col_h:
         with st.expander("?"):
             st.write("Control de impulsos, planificación, perseverancia entrenada.")
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        st.session_state.values["exp_adultas"] = st.slider("EXPERIENCIAS ADULTAS REFORZANTES", 0,100,st.session_state.values["exp_adultas"])
+        st.session_state.values["exp_adultas"] = st.slider("EXPERIENCIAS ADULTAS REFORZANTES", 0,100,st.session_state.values["exp_adultas"], key="exp_adultas")
     with col_h:
         with st.expander("?"):
             st.write("Éxitos repetidos o fracasos que moldean identidad actual.")
@@ -212,35 +208,35 @@ with tab4:
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        st.session_state.values["personas_cercanas"] = st.slider("PERSONAS CERCANAS", 0,100,st.session_state.values["personas_cercanas"])
+        st.session_state.values["personas_cercanas"] = st.slider("PERSONAS CERCANAS", 0,100,st.session_state.values["personas_cercanas"], key="personas_cercanas")
     with col_h:
         with st.expander("?"):
             st.write("Calidad emocional diaria de relaciones cercanas.")
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        st.session_state.values["contenido_consumido"] = st.slider("CONTENIDO CONSUMIDO", 0,100,st.session_state.values["contenido_consumido"])
+        st.session_state.values["contenido_consumido"] = st.slider("CONTENIDO CONSUMIDO", 0,100,st.session_state.values["contenido_consumido"], key="contenido_consumido")
     with col_h:
         with st.expander("?"):
             st.write("Redes, noticias, conversaciones. Priming cognitivo constante.")
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        st.session_state.values["espacio_fisico"] = st.slider("ESPACIO FÍSICO", 0,100,st.session_state.values["espacio_fisico"])
+        st.session_state.values["espacio_fisico"] = st.slider("ESPACIO FÍSICO", 0,100,st.session_state.values["espacio_fisico"], key="espacio_fisico")
     with col_h:
         with st.expander("?"):
             st.write("Orden, luz, ruido, ergonomía. Impacto sensorial continuo.")
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        st.session_state.values["estado_momento"] = st.slider("ESTADO MOMENTO-A-MOMENTO", 0,100,st.session_state.values["estado_momento"])
+        st.session_state.values["estado_momento"] = st.slider("ESTADO MOMENTO-A-MOMENTO", 0,100,st.session_state.values["estado_momento"], key="estado_momento")
     with col_h:
         with st.expander("?"):
             st.write("Glucosa, fatiga, postura. Priming corporal inmediato.")
 
     col_s, col_h = st.columns([4,1])
     with col_s:
-        st.session_state.values["conciencia_interna"] = st.slider("CONCIENCIA INTERNA", 0,100,st.session_state.values["conciencia_interna"])
+        st.session_state.values["conciencia_interna"] = st.slider("CONCIENCIA INTERNA", 0,100,st.session_state.values["conciencia_interna"], key="conciencia_interna")
     with col_h:
         with st.expander("?"):
             st.write("Meditación, terapia, metacognición. Amplificador de todas las capas modificables.")
