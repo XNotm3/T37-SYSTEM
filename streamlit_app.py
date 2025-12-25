@@ -1,13 +1,13 @@
 import streamlit as st
 import random
 
-st.set_page_config(page_title="SIMULADOR DE PERSONALIDAD PRO", layout="wide")
-st.title("🧠 PERSONALIDAD T37")
+st.set_page_config(page_title="Motherboard Humana v3.0", layout="wide")
+st.title("🧠 MOTHERBOARD HUMANA v3.0")
 st.markdown("**Simulador Determinista Avanzado inspirado en Robert Sapolsky**")
-st.markdown("Modifica cada componente y observa cómo cambia tu personalidad en tiempo real.")
+st.markdown("Ajusta los sliders para ver cómo cambian tu personalidad y funcionamiento mental.")
 st.markdown("---")
 
-# Sidebar presets
+# Sidebar: Modos + Botones Reset y Random
 st.sidebar.header("🎛️ Modos Preprogramados")
 presets = {
     "Ninguno": None,
@@ -21,39 +21,98 @@ presets = {
 
 preset_seleccionado = st.sidebar.selectbox("Elige un modo", list(presets.keys()))
 
-# Tabs
-tab1, tab2, tab3, tab4 = st.tabs(["🔴 Núcleo", "🟠 Profundas", "🟡 Medias", "🟢 Externas & BIOS"])
+st.sidebar.markdown("---")
+col_reset, col_random = st.sidebar.columns(2)
+reset = col_reset.button("🔄 Reset")
+randomize = col_random.button("🎲 Random")
 
+# Valores por defecto base
 defaults = {
     "genetica": 50, "neuro_temprano": 50, "esquemas_infancia": 60, "narrativa_cultural": 60,
     "fisiologia": 70, "habitos": 70, "experiencias_adultas": 65,
     "entorno": 75, "estado_momento": 80, "conciencia": 60
 }
 
-if preset_seleccionado != "Ninguno":
-    if presets[preset_seleccionado] is not None:
-        defaults.update(presets[preset_seleccionado])
+# Aplicar preset
+if preset_seleccionado != "Ninguno" and presets[preset_seleccionado] is not None:
+    defaults.update(presets[preset_seleccionado])
+
+# Reset o Random
+if reset:
+    st.experimental_rerun()  # Resetea todo a defaults (el preset "Ninguno" está activo por defecto)
+
+if randomize:
+    defaults = {k: random.randint(30, 90) for k in defaults}
+    preset_seleccionado = "Ninguno"  # Para que no sobrescriba el random
+    st.experimental_rerun()
+
+# Tabs
+tab1, tab2, tab3, tab4 = st.tabs(["🔴 Núcleo Inmutable", "🟠 Capas Profundas", "🟡 Capas Medias", "🟢 Capas Externas & BIOS"])
 
 with tab1:
-    genetica = st.slider("Genética base", 0, 100, defaults["genetica"])
-    neuro_temprano = st.slider("Neurodesarrollo temprano (0-5 años)", 0, 100, defaults["neuro_temprano"])
+    st.subheader("🔴 Núcleo Inmutable (muy difícil de cambiar)")
+    genetica = st.slider(
+        "Genética base",
+        0, 100, defaults["genetica"],
+        help="Temperamento innato, predisposición a ansiedad/impulsividad, resiliencia genética. Heredado + efectos prenatales."
+    )
+    neuro_temprano = st.slider(
+        "Neurodesarrollo temprano (0-5 años)",
+        0, 100, defaults["neuro_temprano"],
+        help="Calidad del apego, estrés infantil temprano, cableado básico de amígdala y corteza prefrontal."
+    )
 
 with tab2:
-    esquemas_infancia = st.slider("Esquemas infancia/adolescencia", 0, 100, defaults["esquemas_infancia"])
-    narrativa_cultural = st.slider("Narrativa cultural", 0, 100, defaults["narrativa_cultural"])
+    st.subheader("🟠 Capas Profundas (cambiables con esfuerzo profundo)")
+    esquemas_infancia = st.slider(
+        "Esquemas y creencias de infancia/adolescencia",
+        0, 100, defaults["esquemas_infancia"],
+        help="Modelos parentales internalizados, experiencias escolares, creencias núcleo sobre uno mismo y el mundo."
+    )
+    narrativa_cultural = st.slider(
+        "Narrativa cultural y valores absorbidos",
+        0, 100, defaults["narrativa_cultural"],
+        help="Ideología política, religión, normas de género, expectativas sociales de tu cultura."
+    )
 
 with tab3:
+    st.subheader("🟡 Capas Medias (modificables con disciplina)")
     col1, col2 = st.columns(2)
     with col1:
-        fisiologia = st.slider("Fisiología actual", 0, 100, defaults["fisiologia"])
-        habitos = st.slider("Hábitos diarios", 0, 100, defaults["habitos"])
+        fisiologia = st.slider(
+            "Fisiología actual",
+            0, 100, defaults["fisiologia"],
+            help="Sueño, niveles hormonales, dieta, ejercicio, microbioma. Impacto directo en energía y estado de ánimo."
+        )
+        habitos = st.slider(
+            "Hábitos y rutinas diarias",
+            0, 100, defaults["habitos"],
+            help="Disciplina matutina, productividad, regulación emocional entrenada, consistencia."
+        )
     with col2:
-        experiencias_adultas = st.slider("Experiencias adultas", 0, 100, defaults["experiencias_adultas"])
+        experiencias_adultas = st.slider(
+            "Experiencias acumuladas en edad adulta",
+            0, 100, defaults["experiencias_adultas"],
+            help="Relaciones, éxitos/fracasos laborales, traumas o logros recientes que moldean tu identidad actual."
+        )
 
 with tab4:
-    entorno = st.slider("Entorno inmediato", 0, 100, defaults["entorno"])
-    estado_momento = st.slider("Estado momento-a-momento", 0, 100, defaults["estado_momento"])
-    conciencia = st.slider("Conciencia / Metacognición", 0, 100, defaults["conciencia"])
+    st.subheader("🟢 Capas Externas (fáciles de cambiar)")
+    entorno = st.slider(
+        "Entorno inmediato",
+        0, 100, defaults["entorno"],
+        help="Personas con las que convives, contenido que consumes, espacio físico, redes sociales."
+    )
+    estado_momento = st.slider(
+        "Estado momento-a-momento",
+        0, 100, defaults["estado_momento"],
+        help="Nivel de glucosa, fatiga actual, postura corporal, priming sutil del entorno inmediato."
+    )
+    conciencia = st.slider(
+        "Conciencia / Metacognición",
+        0, 100, defaults["conciencia"],
+        help="Nivel de autoconocimiento, terapia, meditación, journaling. Amplifica el impacto de todos los cambios."
+    )
 
 st.markdown("---")
 st.header("🧬 PERSONALIDAD RESULTANTE")
@@ -88,38 +147,29 @@ rasgos = {
     "Autoestima estable": round(e * 50 + exp * 40 + con * 10, 1),
 }
 
-# Perfil global (con clave simple para el diccionario)
+# Perfil
 if score_final >= 90:
     perfil = "TITÁN OPTIMIZADO"
+    emoji = "🦸 "
 elif score_final >= 80:
     perfil = "ALTO RENDIMIENTO"
+    emoji = "⚡ "
 elif score_final >= 65:
     perfil = "EQUILIBRADO"
+    emoji = "🟢 "
 elif score_final >= 50:
     perfil = "SUPERVIVENCIA CONTROLADA"
+    emoji = "🟡 "
 elif score_final >= 35:
     perfil = "REACTIVO"
+    emoji = "🟠 "
 else:
     perfil = "SOBRECARGA"
+    emoji = "🔴 "
 
-# Mostrar perfil con emoji correspondiente
-emoji_perfil = ""
-if "TITÁN" in perfil:
-    emoji_perfil = "🦸 "
-elif "ALTO RENDIMIENTO" in perfil:
-    emoji_perfil = "⚡ "
-elif "EQUILIBRADO" in perfil:
-    emoji_perfil = "🟢 "
-elif "SUPERVIVENCIA" in perfil:
-    emoji_perfil = "🟡 "
-elif "REACTIVO" in perfil:
-    emoji_perfil = "🟠 "
-else:
-    emoji_perfil = "🔴 "
-
-st.markdown(f"<h2 style='text-align: center;'>{emoji_perfil}{perfil}</h2>", unsafe_allow_html=True)
+st.markdown(f"<h2 style='text-align: center;'>{emoji}{perfil}</h2>", unsafe_allow_html=True)
 st.progress(score_final / 100)
-st.metric("Nivel global", f"{score_final:.1f}/100")
+st.metric("Nivel global de funcionamiento", f"{score_final:.1f}/100")
 
 st.subheader("Rasgos detallados")
 for rasgo, valor in rasgos.items():
@@ -135,7 +185,6 @@ descripciones = {
     "REACTIVO": "Alta reactividad emocional, ansiedad frecuente y baja motivación. Necesitas intervención urgente en fisiología y entorno.",
     "SOBRECARGA": "Burnout o colapso emocional. Enfócate exclusivamente en recuperación: sueño, nutrición y aislamiento de estresores."
 }
-
 st.write(descripciones[perfil])
 
 st.info("💡 **Consejo del sistema**: " + random.choice([
@@ -145,4 +194,4 @@ st.info("💡 **Consejo del sistema**: " + random.choice([
     "Acepta tu núcleo genético y maximiza lo modificable."
 ]))
 
-st.caption("PERSONALIDAD NUEVA. ¡Disfruta experimentando con tu mente!")
+st.caption("Motherboard Humana v3.1 – Con Reset, Random y explicaciones detalladas.")
