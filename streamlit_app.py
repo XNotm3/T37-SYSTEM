@@ -1,59 +1,63 @@
 import streamlit as st
 import random
 
-# === THEME T37 - FONDO NEGRO SÓLIDO CON NEON AZUL ===
+# === THEME T37 - FONDO NEGRO SÓLIDO + NEON SELECTIVO ===
 st.markdown("""
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
 <style>
-    /* Fondo negro sólido puro */
+    /* Fondo negro sólido */
     .stApp {
         background-color: #000000;
-        background-image: none;
     }
     
-    /* Overlay semi-transparente para contenido (opcional, para profundidad) */
+    /* Contenido con fondo negro sutil */
     .main > div {
-        background-color: rgba(0, 0, 0, 0.8);
-        padding: 30px;
-        border-radius: 20px;
-        backdrop-filter: blur(5px);
-        border: 2px solid #00bfff; /* Borde neon azul */
-        box-shadow: 0 0 30px rgba(0, 191, 255, 0.5);
+        background-color: rgba(10, 10, 10, 0.9);
+        padding: 20px;
+        border-radius: 15px;
     }
     
-    /* Texto neon azul glow */
-    h1, h2, h3, h4, .stMarkdown, label, .stCaption {
+    /* Texto normal (blanco/gris claro, sin glow excepto título y resultados) */
+    .stMarkdown, label, .stCaption, p, div {
+        color: #e0e0e0 !important;
+        font-family: 'Courier New', monospace;
+    }
+    
+    /* Título principal y diagnóstico con neon azul */
+    h1, .diagnostico-titulo {
         color: #00bfff !important;
-        text-shadow: 0 0 20px #00bfff, 0 0 10px #0099ff;
-        font-family: 'Orbitron', monospace !important;
+        text-shadow: 0 0 20px #00bfff;
+        text-align: center;
+        font-size: 2.8rem !important;
     }
     
-    h1 { font-size: 3.8rem !important; text-align: center; }
+    h2 { font-size: 1.8rem !important; color: #ffffff; }
     
-    /* Sliders neon azul */
-    .stSlider > div > div > div > div {
-        background: linear-gradient(to right, #00bfff, #0099ff) !important;
-        height: 10px !important;
+    /* Sliders neon por capa */
+    /* Rojo para Núcleo */
+    div[data-testid="stVerticalBlock"]:nth-child(1) .stSlider > div > div > div > div {
+        background: linear-gradient(to right, #ff0000, #ff5555) !important;
+    }
+    /* Naranja para Profundas */
+    div[data-testid="stVerticalBlock"]:nth-child(2) .stSlider > div > div > div > div {
+        background: linear-gradient(to right, #ff8800, #ffaa55) !important;
+    }
+    /* Amarillo para Medias */
+    div[data-testid="stVerticalBlock"]:nth-child(3) .stSlider > div > div > div > div {
+        background: linear-gradient(to right, #ffff00, #ffff77) !important;
+    }
+    /* Verde para Externas */
+    div[data-testid="stVerticalBlock"]:nth-child(4) .stSlider > div > div > div > div {
+        background: linear-gradient(to right, #00ff00, #55ff55) !important;
     }
     
-    /* Botones neon azul */
-    button[kind="primary"] {
-        background: linear-gradient(#00bfff, #0066cc) !important;
-        color: white !important;
-        box-shadow: 0 0 30px #00bfff;
-        border: none !important;
-    }
-    
-    /* Sidebar negra con borde neon */
-    section[data-testid="stSidebar"] {
-        background-color: rgba(0, 0, 20, 0.95);
-        border-right: 4px solid #00bfff;
-        box-shadow: 0 0 30px rgba(0, 191, 255, 0.7);
-    }
-    
-    /* Progress bars neon azul */
+    /* Progress bars neon azul suave */
     .stProgress > div > div > div > div {
         background: linear-gradient(to right, #00bfff, #0099ff) !important;
+    }
+    
+    /* Sidebar negra */
+    section[data-testid="stSidebar"] {
+        background-color: #0a0a0a;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -69,7 +73,7 @@ if "perfiles_guardados" not in st.session_state:
     st.session_state.perfiles_guardados = {}
 
 # Sidebar
-st.sidebar.header("🎛️ MODOS RÁPIDOS")
+st.sidebar.header("MODOS RÁPIDOS")
 presets = {
     "Ninguno": None,
     "🦸 TITÁN MÁXIMO": {"g":75,"n":70,"e":85,"c":85,"f":95,"h":95,"exp":85,"ent":90,"mom":95,"con":90},
@@ -84,10 +88,10 @@ preset = st.sidebar.selectbox("Selecciona modo", list(presets.keys()))
 
 st.sidebar.markdown("---")
 col1, col2 = st.sidebar.columns(2)
-reset = col1.button("🔄 RESET")
-randomize = col2.button("🎲 RANDOM")
+reset = col1.button("RESET")
+randomize = col2.button("RANDOM")
 
-st.sidebar.markdown("### 💾 PERFILES PERSONALES")
+st.sidebar.markdown("### PERFILES PERSONALES")
 nombre = st.sidebar.text_input("Nombre para guardar")
 guardar_btn = st.sidebar.button("GUARDAR ACTUAL")
 
@@ -107,88 +111,20 @@ if randomize:
     defaults = {k: random.randint(30,90) for k in defaults}
     st.rerun()
 
-# Sliders
+# Sliders con botón (?) de explicación
 tab1, tab2, tab3, tab4 = st.tabs(["🔴 NÚCLEO", "🟠 PROFUNDAS", "🟡 MEDIAS", "🟢 EXTERNAS"])
 
 with tab1:
-    g = st.slider("GENÉTICA BASE", 0,100,defaults["g"])
-    n = st.slider("NEURODESARROLLO TEMPRANO",0,100,defaults["n"])
+    col_slider, col_help = st.columns([4,1])
+    with col_slider:
+        g = st.slider("GENÉTICA BASE", 0,100,defaults["g"], key="g")
+    with col_help:
+        with st.expander("?"):
+            st.write("Tu hardware de fábrica: temperamento innato, resiliencia genética, predisposiciones. Casi inmodificable.")
 
-with tab2:
-    e = st.slider("ESQUEMAS INFANCIA",0,100,defaults["e"])
-    c = st.slider("NARRATIVA CULTURAL",0,100,defaults["c"])
-
-with tab3:
-    col1, col2 = st.columns(2)
-    with col1:
-        f = st.slider("FISIOLOGÍA ACTUAL",0,100,defaults["f"])
-        h = st.slider("HÁBITOS DIARIOS",0,100,defaults["h"])
-    with col2:
-        exp = st.slider("EXPERIENCIAS ADULTAS",0,100,defaults["exp"])
-
-with tab4:
-    ent = st.slider("ENTORNO INMEDIATO",0,100,defaults["ent"])
-    mom = st.slider("ESTADO MOMENTO",0,100,defaults["mom"])
-    con = st.slider("CONCIENCIA INTERNA",0,100,defaults["con"])
-
-# Guardar
-if guardar_btn and nombre:
-    datos = {"g":g,"n":n,"e":e,"c":c,"f":f,"h":h,"exp":exp,"ent":ent,"mom":mom,"con":con}
-    st.session_state.perfiles_guardados[nombre] = datos
-    st.sidebar.success(f"Guardado: {nombre}")
-
-st.markdown("---")
-st.header("🧬 DIAGNÓSTICO DE SISTEMA")
-
-# Cálculo
-rango = g/100*0.7 + n/100*0.3
-creencias = (e+c)/200
-medio = (f+h+exp)/300
-externo = (ent+mom)/200
-amp = (con/100)**0.6
-score = (rango*0.35 + creencias*0.15 + medio*0.25 + externo*0.25)*100*amp
-
-rasgos = {
-    "RESILIENCIA": round(rango*50 + medio*40 + con/100*10,1),
-    "FOCO": round(h/100*60 + f/100*30 + mom/100*10,1),
-    "EMPATÍA": round(creencias*40 + ent/100*40 + c/100*20,1),
-    "CREATIVIDAD": round(g/100*30 + externo*50 + con/100*20,1),
-    "BAJA ANSIEDAD": round(100 - (n/100*40 + f/100*40 + ent/100*20),1),
-    "AUTOESTIMA": round(e/100*50 + exp/100*40 + con/100*10,1),
-}
-
-if score >= 90: perfil, emoji = "TITÁN OPTIMIZADO", "🦸"
-elif score >= 80: perfil, emoji = "ALTO RENDIMIENTO", "⚡"
-elif score >= 65: perfil, emoji = "EQUILIBRADO", "🟢"
-elif score >= 50: perfil, emoji = "SUPERVIVENCIA", "🟡"
-elif score >= 35: perfil, emoji = "REACTIVO", "🟠"
-else: perfil, emoji = "SOBRECARGA", "🔴"
-
-col1, col2 = st.columns([1,3])
-with col1:
-    st.markdown(f"<h1 style='text-align:center'>{emoji}<br>{perfil}</h1>", unsafe_allow_html=True)
-    st.progress(score/100)
-    st.metric("GLOBAL", f"{score:.1f}/100")
-
-with col2:
-    st.subheader("RADAR DE RASGOS")
-    for rasgo, val in rasgos.items():
-        st.progress(val/100)
-        st.write(f"**{rasgo}**: {val}/100")
-
-st.subheader("DESCRIPCIÓN")
-desc = {
-    "TITÁN OPTIMIZADO": "Sistema al máximo. Flujo y claridad total.",
-    "ALTO RENDIMIENTO": "Energía óptima y regulación perfecta.",
-    "EQUILIBRADO": "Funcionamiento sólido con potencial alto.",
-    "SUPERVIVENCIA": "Operativo pero forzado.",
-    "REACTIVO": "Alta carga emocional.",
-    "SOBRECARGA": "Sistema en riesgo."
-}
-st.write(desc[perfil])
-
-st.success(f"**BOTTLENECK**: {min(rasgos, key=rasgos.get)} → Prioriza esta área")
-
-st.info("💡 CONSEJO: " + random.choice(["Fisiología primero", "Conciencia amplifica todo", "Limpia entorno", "Maximiza lo modificable"]))
-
-st.caption("T37 PERSONALITY SYSTEM v4.0 • Black Edition")
+    col_slider, col_help = st.columns([4,1])
+    with col_slider:
+        n = st.slider("NEURODESARROLLO TEMPRANO",0,100,defaults["n"], key="n")
+    with col_help:
+        with st.expander("?"):
+            st.write("Apego seguro, estrés 0-5 años. Fija
