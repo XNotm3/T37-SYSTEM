@@ -32,11 +32,11 @@ st.markdown("""
 
 st.set_page_config(page_title="T37 PERSONALITY SYSTEM", layout="wide")
 st.title("🧠 T37 PERSONALITY SYSTEM v6.3")
-st.markdown("**SIMULADOR DETERMINISTA AVANZADO • VERSIÓN FINAL OPTIMIZADA**")
-st.markdown("Carga rápida • Sin errores • Desglose causal profundo")
+st.markdown("**SIMULADOR DETERMINISTA AVANZADO • TRANSFORMA TU SISTEMA PERSONAL**")
+st.markdown("Cada capa se desglosa en sus componentes causales más potentes. El slider global muestra la media automática.")
 st.markdown("---")
 
-# === Valores por defecto (TODOS los keys) ===
+# === Valores por defecto ===
 default_values = {
     "gen_heredada": 50, "exp_prenatal": 50, "neuro_critico": 50,
     "estilo_apego": 60, "esquemas_maladapt": 60, "narrativa_cultural": 60,
@@ -45,7 +45,7 @@ default_values = {
     "estado_momento": 80, "conciencia_interna": 60
 }
 
-# === Estado de sesión - INICIALIZACIÓN SEGURA ===
+# === Estado de sesión centralizado ===
 if "values" not in st.session_state:
     st.session_state.values = default_values.copy()
 
@@ -120,16 +120,157 @@ with tab1:
         with st.expander("?"):
             st.write("Cableado permanente 0-3 años.")
 
-# (El resto del código es idéntico al anterior, solo cambia la inicialización)
+with tab2:
+    st.markdown("**MODIFICABILIDAD: 20-40%** – Terapia profunda")
+    profundas_media = (v["estilo_apego"] + v["esquemas_maladapt"] + v["narrativa_cultural"]) / 3
+    st.slider("PROFUNDAS GLOBAL", 0, 100, int(profundas_media), disabled=True)
 
-# ... (el resto del código de tabs, cálculo y diagnóstico es el mismo que en v6.2)
+    col_s, col_h = st.columns([4,1])
+    with col_s:
+        v["estilo_apego"] = st.slider("ESTILO DE APEGO", 0,100,v["estilo_apego"])
+    with col_h:
+        with st.expander("?"):
+            st.write("Seguro/ansioso/evitante.")
 
-# Para no repetir todo, el resto es exactamente el mismo que en el mensaje anterior (tabs, sliders, cálculo, diagnóstico).
+    col_s, col_h = st.columns([4,1])
+    with col_s:
+        v["esquemas_maladapt"] = st.slider("ESQUEMAS MALADAPTATIVOS", 0,100,v["esquemas_maladapt"])
+    with col_h:
+        with st.expander("?"):
+            st.write("Creencias núcleo negativas.")
 
-# Si necesitas el código completo con todo, dime y te lo paso entero otra vez, pero la única diferencia es la inicialización segura al principio.
+    col_s, col_h = st.columns([4,1])
+    with col_s:
+        v["narrativa_cultural"] = st.slider("NARRATIVA CULTURAL", 0,100,v["narrativa_cultural"])
+    with col_h:
+        with st.expander("?"):
+            st.write("Valores internalizados.")
 
-### Lo importante:
-La inicialización ahora es **100% segura**:
-```python
-if "values" not in st.session_state:
-    st.session_state.values = default_values.copy()
+with tab3:
+    st.markdown("**MODIFICABILIDAD: 60-80%** – Hábitos y disciplina")
+    medias_media = (v["fisiologia_actual"] + v["habitos_ejecutivos"] + v["exp_adultas"]) / 3
+    st.slider("MEDIAS GLOBAL", 0, 100, int(medias_media), disabled=True)
+
+    col_s, col_h = st.columns([4,1])
+    with col_s:
+        v["fisiologia_actual"] = st.slider("FISIOLOGÍA ACTUAL", 0,100,v["fisiologia_actual"])
+    with col_h:
+        with st.expander("?"):
+            st.write("Sueño, hormonas, ejercicio.")
+
+    col_s, col_h = st.columns([4,1])
+    with col_s:
+        v["habitos_ejecutivos"] = st.slider("HÁBITOS EJECUTIVOS", 0,100,v["habitos_ejecutivos"])
+    with col_h:
+        with st.expander("?"):
+            st.write("Disciplina, planificación.")
+
+    col_s, col_h = st.columns([4,1])
+    with col_s:
+        v["exp_adultas"] = st.slider("EXPERIENCIAS ADULTAS", 0,100,v["exp_adultas"])
+    with col_h:
+        with st.expander("?"):
+            st.write("Éxitos y traumas recientes.")
+
+with tab4:
+    st.markdown("**MODIFICABILIDAD: 90-100%** – Cambio rápido")
+    entorno_media = (v["personas_cercanas"] + v["contenido_consumido"] + v["espacio_fisico"]) / 3
+    st.slider("ENTORNO GLOBAL", 0, 100, int(entorno_media), disabled=True)
+
+    externas_media = (entorno_media + v["estado_momento"] + v["conciencia_interna"]) / 3
+    st.slider("EXTERNAS GLOBAL", 0, 100, int(externas_media), disabled=True)
+
+    col_s, col_h = st.columns([4,1])
+    with col_s:
+        v["personas_cercanas"] = st.slider("PERSONAS CERCANAS", 0,100,v["personas_cercanas"])
+    with col_h:
+        with st.expander("?"):
+            st.write("Calidad emocional diaria de relaciones cercanas.")
+
+    col_s, col_h = st.columns([4,1])
+    with col_s:
+        v["contenido_consumido"] = st.slider("CONTENIDO CONSUMIDO", 0,100,v["contenido_consumido"])
+    with col_h:
+        with st.expander("?"):
+            st.write("Redes, noticias, conversaciones.")
+
+    col_s, col_h = st.columns([4,1])
+    with col_s:
+        v["espacio_fisico"] = st.slider("ESPACIO FÍSICO", 0,100,v["espacio_fisico"])
+    with col_h:
+        with st.expander("?"):
+            st.write("Orden, luz, ruido.")
+
+    col_s, col_h = st.columns([4,1])
+    with col_s:
+        v["estado_momento"] = st.slider("ESTADO MOMENTO", 0,100,v["estado_momento"])
+    with col_h:
+        with st.expander("?"):
+            st.write("Energía actual, postura.")
+
+    col_s, col_h = st.columns([4,1])
+    with col_s:
+        v["conciencia_interna"] = st.slider("CONCIENCIA INTERNA", 0,100,v["conciencia_interna"])
+    with col_h:
+        with st.expander("?"):
+            st.write("Meditación, terapia. Amplificador.")
+
+st.markdown("---")
+st.header("🧬 DIAGNÓSTICO DE SISTEMA")
+
+# Cálculo
+v = st.session_state.values
+
+nucleo = (v["gen_heredada"] + v["exp_prenatal"] + v["neuro_critico"]) / 3 / 100
+profundas = (v["estilo_apego"] + v["esquemas_maladapt"] + v["narrativa_cultural"]) / 3 / 100
+medias = (v["fisiologia_actual"] + v["habitos_ejecutivos"] + v["exp_adultas"]) / 3 / 100
+entorno = (v["personas_cercanas"] + v["contenido_consumido"] + v["espacio_fisico"]) / 3 / 100
+externas = (entorno + v["estado_momento"] / 100 + v["conciencia_interna"] / 100) / 3
+
+amp = (v["conciencia_interna"] / 100) ** 0.6
+
+score = (nucleo * 0.25 + profundas * 0.20 + medias * 0.30 + externas * 0.25) * 100 * amp
+
+# Rasgos
+rasgos = {
+    "RESILIENCIA": round(nucleo*60 + medias*30 + v["conciencia_interna"]/100*10,1),
+    "FOCO": round(v["habitos_ejecutivos"]/100*60 + v["fisiologia_actual"]/100*30 + v["estado_momento"]/100*10,1),
+    "EMPATÍA": round(profundas*50 + entorno*40 + v["conciencia_interna"]/100*10,1),
+    "CREATIVIDAD": round(nucleo*30 + externas*50 + v["conciencia_interna"]/100*20,1),
+    "BAJA ANSIEDAD": round(100 - (nucleo*40 + v["fisiologia_actual"]/100*40 + entorno*20),1),
+    "AUTOESTIMA": round(profundas*50 + v["exp_adultas"]/100*40 + v["conciencia_interna"]/100*10,1),
+}
+
+if score >= 90: perfil, emoji = "TITÁN OPTIMIZADO", "🦸"
+elif score >= 80: perfil, emoji = "ALTO RENDIMIENTO", "⚡"
+elif score >= 65: perfil, emoji = "EQUILIBRADO", "🟢"
+elif score >= 50: perfil, emoji = "SUPERVIVENCIA", "🟡"
+elif score >= 35: perfil, emoji = "REACTIVO", "🟠"
+else: perfil, emoji = "SOBRECARGA", "🔴"
+
+st.markdown(f"<h1 class='diagnostico-titulo'>{emoji} {perfil}</h1>", unsafe_allow_html=True)
+st.progress(score/100)
+st.metric("GLOBAL", f"{score:.1f}/100")
+
+st.subheader("RADAR DE RASGOS")
+for rasgo, val in rasgos.items():
+    st.progress(val/100)
+    st.caption(f"**{rasgo}**: {val}/100")
+
+st.subheader("DESCRIPCIÓN")
+desc = {
+    "TITÁN OPTIMIZADO": "Operas cerca del máximo de tu rango genético. Flujo, resiliencia y claridad sostenida.",
+    "ALTO RENDIMIENTO": "Energía abundante, foco consistente y regulación emocional óptima.",
+    "EQUILIBRADO": "Funcionamiento sólido con amplio margen para upgrades.",
+    "SUPERVIVENCIA": "Operativo pero con esfuerzo. Prioriza recuperación.",
+    "REACTIVO": "Alta reactividad emocional. Intervención urgente en fisiología y entorno.",
+    "SOBRECARGA": "Sistema en riesgo. Modo protección: descanso y aislamiento de estresores."
+}
+st.write(desc[perfil])
+
+bottleneck = min(rasgos, key=rasgos.get)
+st.success(f"**BOTTLENECK**: {bottleneck} → Ataca primero esta área")
+
+st.info("💡 CONSEJO: Las capas externas y medias son tu mayor palanca de cambio inmediato.")
+
+st.caption("T37 PERSONALITY SYSTEM v6.3 • Edición Causal Profunda • Tu herramienta de transformación real")
