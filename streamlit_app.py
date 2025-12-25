@@ -1,33 +1,30 @@
 import streamlit as st
 import random
 
-# === THEME T37 CYBERPUNK - FONDO NEGRO CON CIRCUITOS NEON AZULES ===
+# === THEME T37 - FONDO NEGRO SÓLIDO CON NEON AZUL ===
 st.markdown("""
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
 <style>
-    /* Fondo negro sólido con circuitos neon azules */
+    /* Fondo negro sólido puro */
     .stApp {
-        background-image: url("https://images.stockcake.com/public/d/d/7/dd7c8de0-80a7-4a1e-b49e-4ef9e4f740ab_large/neon-circuit-glow-stockcake.jpg");
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-        background-color: #000000; /* Fallback negro sólido */
+        background-color: #000000;
+        background-image: none;
     }
     
-    /* Overlay oscuro para contenido */
+    /* Overlay semi-transparente para contenido (opcional, para profundidad) */
     .main > div {
-        background-color: rgba(0, 0, 0, 0.85);
+        background-color: rgba(0, 0, 0, 0.8);
         padding: 30px;
         border-radius: 20px;
-        backdrop-filter: blur(12px);
-        border: 3px solid #00bfff; /* Borde azul neon */
-        box-shadow: 0 0 40px rgba(0, 191, 255, 0.6);
+        backdrop-filter: blur(5px);
+        border: 2px solid #00bfff; /* Borde neon azul */
+        box-shadow: 0 0 30px rgba(0, 191, 255, 0.5);
     }
     
     /* Texto neon azul glow */
     h1, h2, h3, h4, .stMarkdown, label, .stCaption {
-        color: #00bfff !important; /* Azul neon intenso */
-        text-shadow: 0 0 25px #00bfff, 0 0 15px #0099ff;
+        color: #00bfff !important;
+        text-shadow: 0 0 20px #00bfff, 0 0 10px #0099ff;
         font-family: 'Orbitron', monospace !important;
     }
     
@@ -37,7 +34,6 @@ st.markdown("""
     .stSlider > div > div > div > div {
         background: linear-gradient(to right, #00bfff, #0099ff) !important;
         height: 10px !important;
-        border-radius: 8px;
     }
     
     /* Botones neon azul */
@@ -46,33 +42,26 @@ st.markdown("""
         color: white !important;
         box-shadow: 0 0 30px #00bfff;
         border: none !important;
-        font-weight: bold;
     }
     
-    /* Sidebar */
+    /* Sidebar negra con borde neon */
     section[data-testid="stSidebar"] {
-        background-color: rgba(0, 0, 30, 0.95);
-        border-right: 5px solid #00bfff;
-        box-shadow: 0 0 40px rgba(0, 191, 255, 0.8);
+        background-color: rgba(0, 0, 20, 0.95);
+        border-right: 4px solid #00bfff;
+        box-shadow: 0 0 30px rgba(0, 191, 255, 0.7);
     }
     
     /* Progress bars neon azul */
     .stProgress > div > div > div > div {
         background: linear-gradient(to right, #00bfff, #0099ff) !important;
     }
-    
-    /* Tabs neon azul */
-    .stTabs [data-baseweb="tab"] {
-        color: #00bfff !important;
-        text-shadow: 0 0 15px #00bfff;
-    }
 </style>
 """, unsafe_allow_html=True)
 
 st.set_page_config(page_title="T37 PERSONALITY SYSTEM", layout="wide")
 st.title("🧠 T37 PERSONALITY SYSTEM")
-st.markdown("**SIMULADOR DETERMINISTA AVANZADO • TRANSFORMA TU SISTEMA**")
-st.markdown("Diagnostica y optimiza tu mente como una motherboard futurista")
+st.markdown("**SIMULADOR DETERMINISTA AVANZADO**")
+st.markdown("Diagnostica y transforma tu sistema personal")
 st.markdown("---")
 
 # Inicializar sesión
@@ -99,21 +88,19 @@ reset = col1.button("🔄 RESET")
 randomize = col2.button("🎲 RANDOM")
 
 st.sidebar.markdown("### 💾 PERFILES PERSONALES")
-nombre = st.sidebar.text_input("Nombre para guardar (ej: Objetivo 2026)")
+nombre = st.sidebar.text_input("Nombre para guardar")
 guardar_btn = st.sidebar.button("GUARDAR ACTUAL")
 
-cargar = st.sidebar.selectbox("Cargar perfil guardado", [""] + list(st.session_state.perfiles_guardados.keys()))
+cargar = st.sidebar.selectbox("Cargar perfil", [""] + list(st.session_state.perfiles_guardados.keys()))
 
 # Defaults
 defaults = {"g":50,"n":50,"e":60,"c":60,"f":70,"h":70,"exp":65,"ent":75,"mom":80,"con":60}
 
-# Aplicar preset o cargar
 if preset != "Ninguno" and presets[preset] is not None:
     defaults.update(presets[preset])
 if cargar:
     defaults.update(st.session_state.perfiles_guardados[cargar])
 
-# Reset o Random
 if reset:
     st.rerun()
 if randomize:
@@ -124,27 +111,27 @@ if randomize:
 tab1, tab2, tab3, tab4 = st.tabs(["🔴 NÚCLEO", "🟠 PROFUNDAS", "🟡 MEDIAS", "🟢 EXTERNAS"])
 
 with tab1:
-    g = st.slider("GENÉTICA BASE", 0,100,defaults["g"],help="Hardware de fábrica. Temperamento innato.")
-    n = st.slider("NEURODESARROLLO TEMPRANO",0,100,defaults["n"],help="Apego y estrés infantil.")
+    g = st.slider("GENÉTICA BASE", 0,100,defaults["g"])
+    n = st.slider("NEURODESARROLLO TEMPRANO",0,100,defaults["n"])
 
 with tab2:
-    e = st.slider("ESQUEMAS INFANCIA",0,100,defaults["e"],help="Creencias núcleo.")
-    c = st.slider("NARRATIVA CULTURAL",0,100,defaults["c"],help="Valores absorbidos.")
+    e = st.slider("ESQUEMAS INFANCIA",0,100,defaults["e"])
+    c = st.slider("NARRATIVA CULTURAL",0,100,defaults["c"])
 
 with tab3:
     col1, col2 = st.columns(2)
     with col1:
-        f = st.slider("FISIOLOGÍA ACTUAL",0,100,defaults["f"],help="Sueño, dieta, ejercicio.")
-        h = st.slider("HÁBITOS DIARIOS",0,100,defaults["h"],help="Disciplina y rutinas.")
+        f = st.slider("FISIOLOGÍA ACTUAL",0,100,defaults["f"])
+        h = st.slider("HÁBITOS DIARIOS",0,100,defaults["h"])
     with col2:
-        exp = st.slider("EXPERIENCIAS ADULTAS",0,100,defaults["exp"],help="Relaciones y logros/traumas.")
+        exp = st.slider("EXPERIENCIAS ADULTAS",0,100,defaults["exp"])
 
 with tab4:
-    ent = st.slider("ENTORNO INMEDIATO",0,100,defaults["ent"],help="Personas y espacio.")
-    mom = st.slider("ESTADO MOMENTO",0,100,defaults["mom"],help="Energía actual.")
-    con = st.slider("CONCIENCIA INTERNA",0,100,defaults["con"],help="Meditación y terapia.")
+    ent = st.slider("ENTORNO INMEDIATO",0,100,defaults["ent"])
+    mom = st.slider("ESTADO MOMENTO",0,100,defaults["mom"])
+    con = st.slider("CONCIENCIA INTERNA",0,100,defaults["con"])
 
-# Guardar perfil
+# Guardar
 if guardar_btn and nombre:
     datos = {"g":g,"n":n,"e":e,"c":c,"f":f,"h":h,"exp":exp,"ent":ent,"mom":mom,"con":con}
     st.session_state.perfiles_guardados[nombre] = datos
@@ -204,4 +191,4 @@ st.success(f"**BOTTLENECK**: {min(rasgos, key=rasgos.get)} → Prioriza esta ár
 
 st.info("💡 CONSEJO: " + random.choice(["Fisiología primero", "Conciencia amplifica todo", "Limpia entorno", "Maximiza lo modificable"]))
 
-st.caption("T37 PERSONALITY SYSTEM v4.0 • Neon Blue Circuit Edition")
+st.caption("T37 PERSONALITY SYSTEM v4.0 • Black Edition")
