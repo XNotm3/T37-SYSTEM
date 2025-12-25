@@ -10,7 +10,7 @@ st.markdown("""
         padding: 20px;
         border-radius: 15px;
     }
-    .stMarkdown, label, .stCaption, p, .streamlit-expanderHeader {
+    .stMarkdown, label, .stCaption {
         color: #e0e0e0 !important;
         font-family: 'Courier New', monospace;
     }
@@ -27,25 +27,12 @@ st.markdown("""
     section[data-testid="stSidebar"] {
         background-color: #0a0a0a;
     }
-    /* Sliders por capa */
-    div[data-testid="stTab"]:nth-child(1) ~ div .stSlider > div > div > div > div {
-        background: linear-gradient(to right, #ff0000, #ff5555) !important;
-    }
-    div[data-testid="stTab"]:nth-child(2) ~ div .stSlider > div > div > div > div {
-        background: linear-gradient(to right, #ff8800, #ffaa55) !important;
-    }
-    div[data-testid="stTab"]:nth-child(3) ~ div .stSlider > div > div > div > div {
-        background: linear-gradient(to right, #ffff00, #ffff77) !important;
-    }
-    div[data-testid="stTab"]:nth-child(4) ~ div .stSlider > div > div > div > div {
-        background: linear-gradient(to right, #00ff00, #55ff55) !important;
-    }
 </style>
 """, unsafe_allow_html=True)
 
 st.set_page_config(page_title="T37 PERSONALITY SYSTEM", layout="wide")
-st.title("🧠 T37 PERSONALITY SYSTEM")
-st.markdown("**SIMULADOR DETERMINISTA AVANZADO**")
+st.title("🧠 T37 PERSONALITY SYSTEM v7.0")
+st.markdown("**SIMULADOR DETERMINISTA AVANZADO • TRANSFORMA TU SISTEMA PERSONAL**")
 st.markdown("Cada capa se desglosa en sus componentes causales más potentes. El slider global muestra la media automática.")
 st.markdown("---")
 
@@ -231,7 +218,7 @@ with tab4:
 st.markdown("---")
 st.header("🧬 DIAGNÓSTICO DE SISTEMA")
 
-# Cálculo
+# Cálculo seguro
 v = st.session_state.values
 
 nucleo = (v.get("gen_heredada", 50) + v.get("exp_prenatal", 50) + v.get("neuro_critico", 50)) / 3 / 100
@@ -286,4 +273,4 @@ st.success(f"**BOTTLENECK**: {bottleneck} → Ataca primero esta área")
 
 st.info("💡 CONSEJO: Las capas externas y medias son tu mayor palanca de cambio inmediato.")
 
-st.caption("T37 PERSONALITY SYSTEM v6.7 • Versión final estable • Tu herramienta de transformación real")
+st.caption("T37 PERSONALITY SYSTEM v7.0 • Versión final estable • Tu herramienta de transformación real")
