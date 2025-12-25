@@ -2,7 +2,7 @@ import streamlit as st
 import random
 
 st.set_page_config(page_title="SIMULADOR DE PERSONALIDAD PRO", layout="wide")
-st.title("🧠 SIMULADOR DE PERSONALIDAD PRO")
+st.title("🧠 PERSONALIDAD T37")
 st.markdown("**Simulador Determinista Avanzado inspirado en Robert Sapolsky**")
 st.markdown("Modifica cada componente y observa cómo cambia tu personalidad en tiempo real.")
 st.markdown("---")
@@ -145,4 +145,4 @@ st.info("💡 **Consejo del sistema**: " + random.choice([
     "Acepta tu núcleo genético y maximiza lo modificable."
 ]))
 
-st.caption("Motherboard Humana v3.0 – Versión final 100% estable. ¡Disfruta experimentando con tu mente!")
+st.caption("PERSONALIDAD NUEVA. ¡Disfruta experimentando con tu mente!")
