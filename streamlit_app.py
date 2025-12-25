@@ -24,15 +24,18 @@ preset_seleccionado = st.sidebar.selectbox("Elige un modo preprogramado", option
 # Tabs
 tab1, tab2, tab3, tab4 = st.tabs(["🔴 Núcleo Inmutable", "🟠 Capas Profundas", "🟡 Capas Medias", "🟢 Capas Externas & BIOS"])
 
-# Valores por defecto
+# Valores por defecto base
 defaults = {
     "genetica": 50, "neuro_temprano": 50, "esquemas_infancia": 60, "narrativa_cultural": 60,
     "fisiologia": 70, "habitos": 70, "experiencias_adultas": 65,
     "entorno": 75, "estado_momento": 80, "conciencia": 60
 }
 
-if preset_seleccionado != "Ninguno" and presets[preset_seleccionado] is not None:
-    defaults.update(presets[preset_seleccionado])
+# Aplicar preset solo si no es "Ninguno"
+if preset_seleccionado != "Ninguno":
+    selected_preset = presets[preset_seleccionado]
+    if selected_preset is not None:
+        defaults.update(selected_preset)
 
 with tab1:
     st.subheader("🔴 Núcleo Inmutable (5-10% modificable)")
@@ -63,8 +66,7 @@ with tab4:
 st.markdown("---")
 st.header("🧬 PERSONALIDAD RESULTANTE")
 
-# === CÁLCULO CORREGIDO Y ESTABLE ===
-# Convertimos todo a 0-1 para evitar errores
+# Cálculo estable y corregido
 g = genetica / 100
 n = neuro_temprano / 100
 e = esquemas_infancia / 100
@@ -76,21 +78,15 @@ ent = entorno / 100
 mom = estado_momento / 100
 con = conciencia / 100
 
-# 1. Rango genético base
 rango_genetico = g
-
-# 2. Rango efectivo tras neurodesarrollo temprano
 rango_efectivo = rango_genetico * 0.7 + n * 0.3
 
-# 3. Moduladores
 mod_creencias = (e + cult) / 2
 mod_fisiologia_habitos = (f + h + exp) / 3
 mod_externo = (ent + mom) / 2
 
-# 4. Amplificador por conciencia (diminishing returns)
 amplificador_conciencia = con ** 0.6
 
-# 5. Score final
 score_final = (
     rango_efectivo * 0.35 +
     mod_creencias * 0.15 +
@@ -124,12 +120,12 @@ else:
 
 st.markdown(f"<h2 style='text-align: center; color: gold;'>{perfil}</h2>", unsafe_allow_html=True)
 st.progress(score_final / 100)
-st.metric("Nivel global de funcionamiento", f"{score_final:.1f}/100")
+st.metric("Nivel global de funcionamiento", f"{score_final:.1f}/100", delta=None)
 
 st.subheader("Rasgos detallados")
 for rasgo, valor in rasgos.items():
     st.progress(valor / 100)
-    st.write(f"**{rasgo}**: {valor}/100")
+    st.caption(f"**{rasgo}**: {valor}/100")
 
 st.subheader("Descripción narrativa")
 descripciones = {
@@ -149,4 +145,4 @@ st.info("💡 **Consejo del sistema**: " + random.choice([
     "Acepta tu núcleo genético y maximiza lo modificable."
 ]))
 
-st.caption("Motherboard Humana v3.0 – Versión corregida y estable. ¡Disfruta experimentando con tu personalidad!")
+st.caption("Motherboard Humana v3.0 – Versión final estable y sin errores. ¡Disfruta de tu simulador personal!")
