@@ -122,24 +122,77 @@ change = st.selectbox("Entorno actual distinto al de infancia", ["No", "Sí"], k
 responses["Capa 7"] = section_score(c7)
 
 # ---------- RESULTADO ----------
-st.divider()
+def normalize(x):
+    return min(max(x, 1), 5)
+
 if st.button("Calcular perfil determinista"):
     st.subheader("Resultado · Etapa 1")
 
-    for k, v in responses.items():
-        st.write(f"{k}: **{v:.2f} / 5**")
+    # ---- BIG FIVE (OCEAN) ----
+    neuroticism = normalize(
+        np.mean([responses["Capa 1"], responses["Capa 2"], responses["Capa 4"]])
+    )
 
-    dominant = max(responses, key=responses.get)
-    weakest = min(responses, key=responses.get)
+    conscientiousness = normalize(
+        np.mean([responses["Capa 2"], responses["Capa 3"]])
+    )
 
-    st.markdown("### Interpretación sintética")
-    st.write(f"""
-    - **Capa dominante:** {dominant}  
-    - **Capa más vulnerable:** {weakest}  
+    extraversion = normalize(
+        np.mean([responses["Capa 1"], responses["Capa 3"], responses["Capa 6"]])
+    )
 
-    La capa dominante ejerce mayor control causal sobre tu conducta actual.
-    La capa más baja es el punto de mayor retorno marginal para intervención.
+    openness = normalize(
+        np.mean([responses["Capa 3"], responses["Capa 6"], responses["Capa 7"]])
+    )
+
+    agreeableness = normalize(
+        np.mean([responses["Capa 4"], responses["Capa 7"]])
+    )
+
+    # ---- APEGO ----
+    if responses["Capa 4"] >= 3.8:
+        attachment = "Apego mayormente seguro"
+    elif responses["Capa 1"] > 3.5 and responses["Capa 4"] < 3:
+        attachment = "Apego ansioso"
+    elif responses["Capa 3"] > 3.5 and responses["Capa 4"] < 3:
+        attachment = "Apego evitativo funcional"
+    else:
+        attachment = "Apego mixto o desorganizado"
+
+    # ---- PERFIL FUNCIONAL ----
+    if conscientiousness >= 4 and openness >= 4:
+        profile = "Analítico–Estratégico"
+    elif neuroticism >= 4 and extraversion < 3:
+        profile = "Introspectivo–Reactivo"
+    elif extraversion >= 4:
+        profile = "Explorador–Social"
+    else:
+        profile = "Adaptativo–Mixto"
+
+    # ---- OUTPUT ----
+    st.markdown("## Perfil de Personalidad Científico")
+
+    st.markdown(f"""
+    **Big Five (OCEAN):**
+    - Neuroticismo: **{neuroticism:.2f}**
+    - Responsabilidad: **{conscientiousness:.2f}**
+    - Extraversión: **{extraversion:.2f}**
+    - Apertura: **{openness:.2f}**
+    - Amabilidad: **{agreeableness:.2f}**
+
+    **Estilo de apego probable:** {attachment}
+
+    **Perfil funcional dominante:** {profile}
     """)
 
-    st.markdown("### Próximo paso")
-    st.write("Activar Etapa 2: sliders de optimización y construcción de personalidades objetivo.")
+    st.markdown("### Interpretación")
+    st.write(
+        "Este perfil describe cómo tu sistema nervioso, tu historia y tus hábitos actuales "
+        "interactúan para producir tu conducta presente. No es identidad fija, es estado actual."
+    )
+
+    st.markdown("### Siguiente fase")
+    st.write(
+        "Etapa 2 permitirá modificar variables controlables y simular personalidades óptimas "
+        "según objetivos concretos."
+    )
