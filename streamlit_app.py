@@ -3,7 +3,7 @@ import numpy as np
 
 st.set_page_config(page_title="Perfil Determinista · Etapas 1 y 2", layout="centered")
 st.title("Perfil Determinista de Personalidad")
-st.write("Modelo científico por capas causales + análisis de rasgos (Big Five).")
+st.write("Modelo científico por capas causales + análisis Big Five.")
 
 # =========================
 # UTILIDADES
@@ -16,7 +16,9 @@ def normalize(x):
 
 def apply_modifiers(traits, modifiers):
     for k, v in modifiers.items():
-        traits[k] += v
+        key = k.capitalize()
+        if key in traits:
+            traits[key] += v
     return {k: normalize(v) for k, v in traits.items()}
 
 # =========================
@@ -215,7 +217,7 @@ culture_mod = {
 }[culture]
 
 # =========================
-# RESULTADO · ETAPA 1
+# RESULTADOS · ETAPA 1 + 2
 # =========================
 st.divider()
 if st.button("Calcular perfil científico"):
@@ -234,62 +236,50 @@ if st.button("Calcular perfil científico"):
     for k, v in traits.items():
         st.write(f"{k}: **{v:.2f} / 5**")
 
-    # =========================
-    # ETAPA 2 · INTERPRETACIÓN
-    # =========================
     st.divider()
-    st.header("Etapa 2 · Interpretación científica integrada")
+    st.header("Interpretación científica")
 
     def explain_trait(name, value):
-        if name == "Neuroticism":
-            return (
-                "Indica sensibilidad del sistema nervioso ante estrés y amenaza. "
-                "Valores elevados implican mayor reactividad emocional, vigilancia interna "
-                "y propensión a rumiación. Bien regulado, favorece conciencia; mal regulado, desgaste."
+        explanations = {
+            "Neuroticism": (
+                "Alta sensibilidad emocional y reactividad al estrés. "
+                "Aumenta vigilancia y autoconciencia, pero requiere regulación."
                 if value >= 3.5 else
-                "Estabilidad emocional funcional y menor reactividad al estrés."
-            )
-
-        if name == "Conscientiousness":
-            return (
-                "Refleja disciplina, autocontrol y capacidad de sostener hábitos. "
-                "Valores medios indican potencial alto pero dependencia de estructura externa."
+                "Estabilidad emocional funcional."
+            ),
+            "Conscientiousness": (
+                "Disciplina inconsistente. Alto potencial si hay sistemas externos."
                 if value < 3.5 else
                 "Alta automatización conductual y persistencia."
-            )
-
-        if name == "Extraversion":
-            return (
-                "Orientación introspectiva. La energía se recupera en soledad; "
-                "la sobreestimulación social genera fatiga."
+            ),
+            "Extraversion": (
+                "Orientación introspectiva; la energía se recupera en soledad."
                 if value < 3.2 else
-                "Alta energía social y búsqueda de estímulo externo."
-            )
-
-        if name == "Openness":
-            return (
-                "Cognición pragmática, orientada a utilidad y ejecución."
+                "Alta energía social y búsqueda de estímulo."
+            ),
+            "Openness": (
+                "Cognición pragmática orientada a utilidad."
                 if value < 3.2 else
-                "Alta curiosidad intelectual y exploración conceptual."
-            )
-
-        if name == "Agreeableness":
-            return (
-                "Cooperación equilibrada con límites personales."
+                "Alta curiosidad intelectual y exploración."
+            ),
+            "Agreeableness": (
+                "Cooperación equilibrada con límites."
                 if value >= 3 else
-                "Estilo interpersonal más defensivo o competitivo."
-            )
+                "Estilo interpersonal defensivo."
+            ),
+        }
+        return explanations[name]
 
     for k, v in traits.items():
         st.markdown(f"**{k}: {v:.2f} / 5**  \n{explain_trait(k, v)}")
 
     st.markdown("### Síntesis integrada")
     st.write(
-        "El perfil resultante describe una personalidad sensible al entorno interno, "
-        "con capacidad cognitiva y potencial alto de rendimiento, cuyo principal cuello "
-        "de botella no es la capacidad sino la regulación emocional y la estructura conductual. "
-        "Este perfil es dinámico y puede optimizarse mediante sistemas, no fuerza de voluntad."
+        "El perfil describe una personalidad sensible al entorno interno, "
+        "con capacidad cognitiva alta y potencial elevado de rendimiento. "
+        "El principal cuello de botella no es la capacidad, sino la regulación "
+        "emocional y la falta de sistemas conductuales estables."
     )
 
-    st.markdown("### Próximo paso")
-    st.write("Etapa 3 permitirá definir personalidad objetivo y estrategias de reprogramación.")
+    st.markdown("### Etapa siguiente")
+    st.write("La Etapa 3 permitirá definir personalidad objetivo y reprogramación conductual.")
