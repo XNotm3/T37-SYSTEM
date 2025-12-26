@@ -1,198 +1,254 @@
 import streamlit as st
 import numpy as np
 
-st.set_page_config(page_title="Perfil Determinista – Etapa 1", layout="centered")
+st.set_page_config(page_title="Perfil Determinista · Etapa 1", layout="centered")
+st.title("Etapa 1 · Perfil de Personalidad Actual")
+st.write("Cuestionario científico estructurado por capas causales.")
 
-st.title("Etapa 1 · ¿Quién soy ahora?")
-st.write("Cuestionario científico por capas. Responde con honestidad.")
-
-# ---------- UTILIDADES ----------
+# =========================
+# UTILIDADES
+# =========================
 def likert(label, key):
     return st.slider(label, 1, 5, 3, key=key)
 
-def section_score(values):
-    return np.mean(values) if values else 0
-
-# ---------- CUESTIONARIO ----------
-responses = {}
-
-# ===== CAPA 1 =====
-st.header("Capa 1 · Inmediata (segundos–minutos)")
-c1 = []
-c1.append(likert("Irritabilidad con cansancio o hambre", "c1_1"))
-c1.append(likert("Capacidad de calmarme rápido", "c1_2"))
-c1.append(likert("Sensibilidad a estímulos sensoriales", "c1_3"))
-c1.append(likert("Reacción fisiológica al estrés", "c1_4"))
-c1.append(likert("Práctica de mindfulness diaria", "c1_5"))
-c1.append(likert("Distracción por pensamientos recurrentes", "c1_6"))
-c1.append(likert("Rush de energía al motivarme", "c1_7"))
-c1.append(likert("Variabilidad de energía diaria", "c1_8"))
-sleep = st.selectbox(
-    "Horas promedio de sueño",
-    ["<6", "6-7", "7-8", ">8"],
-    key="c1_9"
-)
-c1_open = st.text_input("Estímulo ambiental que más afecta tu ánimo", key="c1_10")
-responses["Capa 1"] = section_score(c1)
-
-# ===== CAPA 2 =====
-st.header("Capa 2 · Hormonal y fisiológica")
-c2 = []
-c2.append(likert("Estrés sostenido diario", "c2_1"))
-c2.append(likert("Ejercicio intenso semanal", "c2_2"))
-c2.append(likert("Calidad de dieta", "c2_3"))
-c2.append(likert("Regularidad del sueño", "c2_4"))
-c2.append(likert("Dolores o inflamación crónica", "c2_5"))
-c2.append(likert("Energía estable semanal", "c2_6"))
-c2.append(likert("Exposición diaria a luz natural", "c2_7"))
-c2.append(likert("Consumo de cafeína/estimulantes", "c2_8"))
-meds = st.text_input("Suplementos o medicación relevante", key="c2_9")
-c2_open = st.text_input("Hábito corporal más influyente en tu humor", key="c2_10")
-responses["Capa 2"] = section_score(c2)
-
-# ===== CAPA 3 =====
-st.header("Capa 3 · Experiencias recientes (1–5 años)")
-c3 = []
-c3.append(likert("Cambio deliberado de hábitos", "c3_1"))
-therapy = st.selectbox("Terapia o coaching actual", ["No", "Sí"], key="c3_2")
-c3.append(likert("Exposición social desafiante", "c3_3"))
-c3.append(likert("Rutinas estructuradas", "c3_4"))
-c3.append(likert("Feedback positivo del entorno", "c3_5"))
-c3.append(likert("Aprendizaje continuo", "c3_6"))
-c3.append(likert("Relaciones seguras", "c3_7"))
-c3.append(likert("Impacto de eventos estresantes", "c3_8"))
-c3.append(likert("Uso de herramientas de hábitos", "c3_9"))
-c3_open = st.text_input("Cambio más significativo logrado", key="c3_10")
-responses["Capa 3"] = section_score(c3)
-
-# ===== CAPA 4 =====
-st.header("Capa 4 · Desarrollo temprano (0–18)")
-c4 = []
-c4.append(likert("Apego seguro", "c4_1"))
-c4.append(likert("Negligencia infantil", "c4_2"))
-c4.append(likert("Conflicto familiar", "c4_3"))
-c4.append(likert("Consistencia parental", "c4_4"))
-c4.append(likert("Experiencias de abandono", "c4_5"))
-c4.append(likert("Estimulación intelectual/emocional", "c4_6"))
-c4.append(likert("Crítica frecuente", "c4_7"))
-c4.append(likert("Adulto de confianza", "c4_8"))
-ace = st.selectbox("Eventos adversos antes de los 18", ["0", "1-3", "4-6", "7+"], key="c4_9")
-c4_open = st.text_input("Creencia personal originada en la infancia", key="c4_10")
-responses["Capa 4"] = section_score(c4)
-
-# ===== CAPA 5 =====
-st.header("Capa 5 · Prenatal y perinatal")
-c5_map = {"Sí": 5, "No": 1, "No lo sé": 3}
-c5 = []
-c5.append(c5_map[st.selectbox("Estrés materno en embarazo", c5_map.keys(), key="c5_1")])
-c5.append(c5_map[st.selectbox("Consumo de sustancias en embarazo", c5_map.keys(), key="c5_2")])
-c5.append(c5_map[st.selectbox("Nacimiento prematuro/bajo peso", c5_map.keys(), key="c5_3")])
-c5.append(c5_map[st.selectbox("Complicaciones de parto", c5_map.keys(), key="c5_4")])
-c5.append(c5_map[st.selectbox("Buen cuidado prenatal", c5_map.keys(), key="c5_5")])
-responses["Capa 5"] = section_score(c5)
-
-# ===== CAPA 6 =====
-st.header("Capa 6 · Genética y evolutiva")
-c6 = []
-c6.append(likert("Ansiedad/depresión familiar", "c6_1"))
-c6.append(likert("Extraversion familiar", "c6_2"))
-c6.append(likert("Responsabilidad/orden familiar", "c6_3"))
-c6.append(likert("Adicciones familiares", "c6_4"))
-c6.append(likert("Apertura a experiencias", "c6_5"))
-gen_test = st.text_input("Test genético relevante (opcional)", key="c6_6")
-responses["Capa 6"] = section_score(c6)
-
-# ===== CAPA 7 =====
-st.header("Capa 7 · Cultural e histórica")
-c7 = []
-c7.append(likert("Cultura colectivista", "c7_1"))
-c7.append(likert("Inestabilidad económica familiar", "c7_2"))
-c7.append(likert("Educación religiosa estricta", "c7_3"))
-env_map = {
-    "Urbano extremo": 5,
-    "Urbano": 4,
-    "Mixto": 3,
-    "Rural": 2,
-    "Muy rural": 1,
-}
-c7.append(env_map[st.selectbox("Entorno de crianza", env_map.keys(), key="c7_4")])
-mig = st.selectbox("Migración forzada o trauma histórico", ["No", "Sí"], key="c7_5")
-c7.append(likert("Narrativas de competencia individual", "c7_6"))
-change = st.selectbox("Entorno actual distinto al de infancia", ["No", "Sí"], key="c7_7")
-responses["Capa 7"] = section_score(c7)
-
-# ---------- RESULTADO ----------
 def normalize(x):
     return min(max(x, 1), 5)
 
-if st.button("Calcular perfil determinista"):
-    st.subheader("Resultado · Etapa 1")
+def apply_modifiers(traits, modifiers):
+    for k, v in modifiers.items():
+        traits[k] += v
+    return {k: normalize(v) for k, v in traits.items()}
 
-    # ---- BIG FIVE (OCEAN) ----
-    neuroticism = normalize(
-        np.mean([responses["Capa 1"], responses["Capa 2"], responses["Capa 4"]])
+# =========================
+# CAPA 1 · INMEDIATA
+# =========================
+st.header("Capa 1 · Respuesta inmediata")
+c1 = [
+    likert("Irritabilidad con cansancio/hambre", "c1_1"),
+    likert("Capacidad de calmarme rápido", "c1_2"),
+    likert("Sensibilidad a estímulos sensoriales", "c1_3"),
+    likert("Reactividad fisiológica al estrés", "c1_4"),
+    likert("Distracción mental frecuente", "c1_5"),
+]
+
+env_stressor = st.radio(
+    "Estímulo ambiental dominante",
+    [
+        "Ruido / sobreestimulación",
+        "Personas / tensión social",
+        "Desorden visual",
+        "Incomodidad física",
+        "Ninguno significativo",
+        "Otro"
+    ],
+    key="c1_env"
+)
+
+env_mod = {
+    "Ruido / sobreestimulación": {"neuroticism": +0.3},
+    "Personas / tensión social": {"neuroticism": +0.4, "extraversion": -0.2},
+    "Desorden visual": {"conscientiousness": -0.3},
+    "Incomodidad física": {"neuroticism": +0.2},
+    "Ninguno significativo": {},
+    "Otro": {}
+}[env_stressor]
+
+capa1 = np.mean(c1)
+
+# =========================
+# CAPA 2 · FISIOLÓGICA
+# =========================
+st.header("Capa 2 · Estado fisiológico")
+c2 = [
+    likert("Estrés sostenido diario", "c2_1"),
+    likert("Ejercicio regular", "c2_2"),
+    likert("Calidad de dieta", "c2_3"),
+    likert("Regularidad del sueño", "c2_4"),
+    likert("Energía estable semanal", "c2_5"),
+]
+
+body_habit = st.radio(
+    "Hábito corporal dominante",
+    [
+        "Sueño irregular",
+        "Sedentarismo",
+        "Exceso de estimulantes",
+        "Alimentación deficiente",
+        "Rutina corporal estable",
+        "Otro"
+    ],
+    key="c2_body"
+)
+
+body_mod = {
+    "Sueño irregular": {"neuroticism": +0.4},
+    "Sedentarismo": {"extraversion": -0.2},
+    "Exceso de estimulantes": {"neuroticism": +0.3},
+    "Alimentación deficiente": {"neuroticism": +0.2},
+    "Rutina corporal estable": {"conscientiousness": +0.3},
+    "Otro": {}
+}[body_habit]
+
+capa2 = np.mean(c2)
+
+# =========================
+# CAPA 3 · EXPERIENCIAS RECIENTES
+# =========================
+st.header("Capa 3 · Cambios recientes")
+c3 = [
+    likert("Rutinas estructuradas", "c3_1"),
+    likert("Aprendizaje continuo", "c3_2"),
+    likert("Exposición social desafiante", "c3_3"),
+]
+
+recent_change = st.radio(
+    "Cambio más significativo reciente",
+    [
+        "Mejoré disciplina y estructura",
+        "Mejoré autoconocimiento emocional",
+        "Cambios inconsistentes",
+        "Pérdidas o retrocesos importantes",
+        "Sin cambios relevantes",
+        "Otro"
+    ],
+    key="c3_change"
+)
+
+change_mod = {
+    "Mejoré disciplina y estructura": {"conscientiousness": +0.4},
+    "Mejoré autoconocimiento emocional": {"neuroticism": -0.2},
+    "Cambios inconsistentes": {"conscientiousness": -0.2},
+    "Pérdidas o retrocesos importantes": {"neuroticism": +0.4},
+    "Sin cambios relevantes": {},
+    "Otro": {}
+}[recent_change]
+
+capa3 = np.mean(c3)
+
+# =========================
+# CAPA 4 · DESARROLLO TEMPRANO
+# =========================
+st.header("Capa 4 · Desarrollo temprano")
+c4 = [
+    likert("Apego seguro", "c4_1"),
+    likert("Negligencia o crítica temprana", "c4_2"),
+    likert("Adulto confiable en infancia", "c4_3"),
+]
+
+belief_choice = st.radio(
+    "Creencia personal predominante",
+    [
+        "Soy disciplinado y capaz",
+        "Puedo mejorar, pero me cuesta sostener el esfuerzo",
+        "Me cuesta ser constante / postergar",
+        "No tengo control sobre mis hábitos",
+        "Siento que algo en mí está defectuoso",
+        "Otro"
+    ],
+    key="c4_belief"
+)
+
+belief_mod = {
+    "Soy disciplinado y capaz": {"conscientiousness": +0.4, "neuroticism": -0.3},
+    "Puedo mejorar, pero me cuesta sostener el esfuerzo": {"conscientiousness": -0.1},
+    "Me cuesta ser constante / postergar": {"conscientiousness": -0.4, "neuroticism": +0.3},
+    "No tengo control sobre mis hábitos": {"conscientiousness": -0.6, "neuroticism": +0.5},
+    "Siento que algo en mí está defectuoso": {"neuroticism": +0.6},
+    "Otro": {}
+}[belief_choice]
+
+capa4 = np.mean(c4)
+
+# =========================
+# CAPA 5 · PRENATAL
+# =========================
+st.header("Capa 5 · Prenatal / Perinatal")
+prenatal = st.radio(
+    "Condiciones prenatales conocidas",
+    [
+        "Estrés materno significativo",
+        "Complicaciones de parto",
+        "Embarazo saludable",
+        "Información insuficiente"
+    ],
+    key="c5"
+)
+
+prenatal_mod = {
+    "Estrés materno significativo": {"neuroticism": +0.3},
+    "Complicaciones de parto": {"neuroticism": +0.2},
+    "Embarazo saludable": {},
+    "Información insuficiente": {}
+}[prenatal]
+
+# =========================
+# CAPA 6 · GENÉTICA
+# =========================
+st.header("Capa 6 · Tendencias familiares")
+c6 = [
+    likert("Ansiedad/depresión familiar", "c6_1"),
+    likert("Responsabilidad familiar", "c6_2"),
+    likert("Apertura a experiencias", "c6_3"),
+]
+capa6 = np.mean(c6)
+
+# =========================
+# CAPA 7 · CULTURAL
+# =========================
+st.header("Capa 7 · Contexto cultural")
+culture = st.radio(
+    "Entorno cultural dominante",
+    [
+        "Alta presión competitiva",
+        "Colectivista/familiar",
+        "Mixto",
+        "Estable y predecible"
+    ],
+    key="c7"
+)
+
+culture_mod = {
+    "Alta presión competitiva": {"neuroticism": +0.2},
+    "Colectivista/familiar": {"agreeableness": +0.3},
+    "Mixto": {},
+    "Estable y predecible": {"neuroticism": -0.2}
+}[culture]
+
+# =========================
+# RESULTADO
+# =========================
+st.divider()
+if st.button("Calcular perfil científico"):
+    traits = {
+        "neuroticism": normalize(np.mean([capa1, capa2, capa4])),
+        "conscientiousness": normalize(np.mean([capa2, capa3])),
+        "extraversion": normalize(np.mean([capa1, capa3, capa6])),
+        "openness": normalize(np.mean([capa3, capa6, capa7 := 3])),
+        "agreeableness": normalize(np.mean([capa4, capa7])),
+    }
+
+    for mod in [env_mod, body_mod, change_mod, belief_mod, prenatal_mod, culture_mod]:
+        traits = apply_modifiers(traits, mod)
+
+    st.subheader("Perfil de Personalidad (Big Five)")
+    for k, v in traits.items():
+        st.write(f"{k.capitalize()}: **{v:.2f} / 5**")
+
+    attachment = (
+        "Seguro" if capa4 >= 3.8 else
+        "Ansioso" if traits["neuroticism"] >= 4 else
+        "Evitativo funcional" if traits["conscientiousness"] >= 3 else
+        "Mixto"
     )
 
-    conscientiousness = normalize(
-        np.mean([responses["Capa 2"], responses["Capa 3"]])
-    )
+    st.markdown("### Síntesis")
+    st.write(f"""
+    - Estilo de apego probable: **{attachment}**
+    - Rasgo dominante: **{max(traits, key=traits.get)}**
+    - Rasgo vulnerable: **{min(traits, key=traits.get)}**
 
-    extraversion = normalize(
-        np.mean([responses["Capa 1"], responses["Capa 3"], responses["Capa 6"]])
-    )
-
-    openness = normalize(
-        np.mean([responses["Capa 3"], responses["Capa 6"], responses["Capa 7"]])
-    )
-
-    agreeableness = normalize(
-        np.mean([responses["Capa 4"], responses["Capa 7"]])
-    )
-
-    # ---- APEGO ----
-    if responses["Capa 4"] >= 3.8:
-        attachment = "Apego mayormente seguro"
-    elif responses["Capa 1"] > 3.5 and responses["Capa 4"] < 3:
-        attachment = "Apego ansioso"
-    elif responses["Capa 3"] > 3.5 and responses["Capa 4"] < 3:
-        attachment = "Apego evitativo funcional"
-    else:
-        attachment = "Apego mixto o desorganizado"
-
-    # ---- PERFIL FUNCIONAL ----
-    if conscientiousness >= 4 and openness >= 4:
-        profile = "Analítico–Estratégico"
-    elif neuroticism >= 4 and extraversion < 3:
-        profile = "Introspectivo–Reactivo"
-    elif extraversion >= 4:
-        profile = "Explorador–Social"
-    else:
-        profile = "Adaptativo–Mixto"
-
-    # ---- OUTPUT ----
-    st.markdown("## Perfil de Personalidad Científico")
-
-    st.markdown(f"""
-    **Big Five (OCEAN):**
-    - Neuroticismo: **{neuroticism:.2f}**
-    - Responsabilidad: **{conscientiousness:.2f}**
-    - Extraversión: **{extraversion:.2f}**
-    - Apertura: **{openness:.2f}**
-    - Amabilidad: **{agreeableness:.2f}**
-
-    **Estilo de apego probable:** {attachment}
-
-    **Perfil funcional dominante:** {profile}
+    Este perfil describe tu **estado actual**, no una identidad fija.
     """)
 
-    st.markdown("### Interpretación")
-    st.write(
-        "Este perfil describe cómo tu sistema nervioso, tu historia y tus hábitos actuales "
-        "interactúan para producir tu conducta presente. No es identidad fija, es estado actual."
-    )
-
-    st.markdown("### Siguiente fase")
-    st.write(
-        "Etapa 2 permitirá modificar variables controlables y simular personalidades óptimas "
-        "según objetivos concretos."
-    )
+    st.markdown("### Etapa siguiente")
+    st.write("Etapa 2 permitirá simular y optimizar personalidades objetivo.")
